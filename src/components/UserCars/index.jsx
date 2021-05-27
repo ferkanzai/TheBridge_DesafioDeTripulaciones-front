@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Bones } from "react-bones/lib";
+import Skeleton from "react-loading-skeleton";
 
 import { getUserCars } from "../../services/users";
 
@@ -13,15 +13,18 @@ import { UserContext } from "../../store";
 const UserCars = ({ car, carToAdd }) => {
   let { token } = useContext(UserContext);
 
+  token = localStorage.getItem("access_token");
+
   const [userCars, setUserCars] = useState([]);
   const [loadingCars, setLoadingCars] = useState(true);
 
-  token = localStorage.getItem("access_token");
   useEffect(() => {
-    getUserCars(token).then((res) => {
-      setUserCars(res);
-      setLoadingCars(false);
-    });
+    getUserCars(token)
+      .then((res) => {
+        setUserCars(res);
+      })
+      .catch((err) => err.code === 401 && setUserCars([]))
+      .finally(() => setLoadingCars(false));
   }, [car, carToAdd, token]);
 
   return (
@@ -29,7 +32,7 @@ const UserCars = ({ car, carToAdd }) => {
       <h3>Estos son tus coches actuales</h3>
       <div className="userCars__cars">
         {loadingCars ? (
-          <Bones width={350} height={200} />
+          <Skeleton width={350} height={162} />
         ) : userCars.length ? (
           userCars.map((car) => (
             <div
