@@ -5,8 +5,12 @@ import AddUserCar from "../../components/AddUserCar";
 import UserCars from "../../components/UserCars";
 
 const Profile = () => {
-  const { user, logout, token } = useContext(UserContext);
+  const { user, logout } = useContext(UserContext);
+  let { token } = useContext(UserContext);
+
   const [carToAdd, setCarToAdd] = useState(null);
+
+  token = localStorage.getItem("access_token");
 
   const handleLogout = () => {
     logout();
