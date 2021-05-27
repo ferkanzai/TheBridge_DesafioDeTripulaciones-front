@@ -18,7 +18,7 @@ export function useUser() {
       .then((user) => setUser(user))
       .catch((err) => err.code === 401 && history.push("/login"))
       .finally(() => setLoadingUser(false));
-  }, []);
+  }, [history, token]);
 
   const login = async (email, password) => {
     postLogin(email, password).then((res) => {

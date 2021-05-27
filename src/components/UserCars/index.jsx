@@ -16,14 +16,13 @@ const UserCars = ({ car, carToAdd }) => {
   const [userCars, setUserCars] = useState([]);
   const [loadingCars, setLoadingCars] = useState(true);
 
+  token = localStorage.getItem("access_token");
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    token = localStorage.getItem("access_token");
     getUserCars(token).then((res) => {
       setUserCars(res);
       setLoadingCars(false);
     });
-  }, [car, carToAdd]);
+  }, [car, carToAdd, token]);
 
   return (
     <div className="userCars">
@@ -58,7 +57,7 @@ const UserCars = ({ car, carToAdd }) => {
             </div>
           ))
         ) : (
-          "No tiens coches añadidos"
+          "No tienes coches añadidos"
         )}
       </div>
     </div>

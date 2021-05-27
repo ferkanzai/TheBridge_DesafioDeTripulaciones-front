@@ -1,13 +1,11 @@
 import { useContext, useState } from "react";
 import { UserContext } from "../../store";
-import { Redirect } from "react-router-dom";
-import Loader from "react-loader-spinner";
 import { postAddUserCar } from "../../services/users";
 import AddUserCar from "../../components/AddUserCar";
 import UserCars from "../../components/UserCars";
 
 const Profile = () => {
-  const { user, logout, token, loading } = useContext(UserContext);
+  const { user, logout, token } = useContext(UserContext);
   const [carToAdd, setCarToAdd] = useState(null);
 
   const handleLogout = () => {
@@ -24,33 +22,10 @@ const Profile = () => {
 
   return (
     <>
-      {loading ? (
-        <Loader
-          type="MutatingDots"
-          color="#00BFFF"
-          height={100}
-          width={100}
-          timeout={3000}
-        />
-      ) : (
-        <>
-          {user ? (
-            <>
-              <h1>Bienvenid@ a mi App! {user.email}</h1>
-              <AddUserCar
-                message="ADD CAR"
-                handleFormSubmit={handleFormSubmit}
-              />
-              <UserCars carToAdd={carToAdd} />
-              <button onClick={handleLogout}>Log out 🔑</button>
-            </>
-          ) : (
-            <>
-              <Redirect to="/login" />
-            </>
-          )}
-        </>
-      )}
+      <h1>Bienvenid@ a mi App! {user.email}</h1>
+      <AddUserCar message="ADD CAR" handleFormSubmit={handleFormSubmit} />
+      <UserCars carToAdd={carToAdd} />
+      <button onClick={handleLogout}>Log out 🔑</button>
     </>
   );
 };

@@ -8,10 +8,10 @@ import Map from "./pages/Map";
 import Footer from "./components/Footer";
 
 import { UserContext, useUser } from "./store";
-import useAuthentication from "./hooks/useAuthentication";
 import "react-toastify/dist/ReactToastify.css";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import SingleUserCar from "./pages/SingleUserCar";
+import WithAuthentication from "./components/hocs/WithAuthentication";
 
 function App() {
   const userContextData = useUser();
@@ -21,7 +21,9 @@ function App() {
       <div className="App">
         <Switch>
           <Route path="/profile" exact>
-            <Profile />
+            <WithAuthentication>
+              <Profile />
+            </WithAuthentication>
           </Route>
 
           <Route path="/login" exact>
