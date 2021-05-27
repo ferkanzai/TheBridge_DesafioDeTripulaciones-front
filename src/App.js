@@ -7,7 +7,9 @@ import SignUp from "./pages/SignUp";
 import Map from "./pages/Map";
 import Footer from "./components/Footer";
 
-import { UserContext, useUser } from "./store";
+import { UserContext } from "./store";
+import { useUser } from "./hooks/useUser";
+
 import "react-toastify/dist/ReactToastify.css";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import SingleUserCar from "./pages/SingleUserCar";
