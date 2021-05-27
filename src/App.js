@@ -43,7 +43,9 @@ function App() {
           </Route>
 
           <Route path="/settings/:userCarId">
-            <SingleUserCar />
+            <WithAuthentication>
+              <SingleUserCar />
+            </WithAuthentication>
           </Route>
         </Switch>
         <Footer />
