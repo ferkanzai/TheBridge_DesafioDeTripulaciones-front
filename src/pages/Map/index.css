@@ -54,9 +54,9 @@
 
 .filter-panel {
   width: 100%;
-  height: calc(100% - 56px);
+  height: calc(100vh - 56px);
   background-color: white;
-  z-index: 6;
+  z-index: 9;
   position: absolute;
   top: 0;
   left: 0;

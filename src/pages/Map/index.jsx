@@ -7,6 +7,7 @@ import "mapbox-gl/dist/svg/mapboxgl-ctrl-zoom-out.svg";
 import { useEffect, useState } from "react";
 import ReactMapboxGl, { Marker, Cluster } from "react-mapbox-gl";
 import mapboxgl from "mapbox-gl";
+import { uuid } from "uuidv4";
 
 import { getChargePoints } from "../../services/charge-points";
 
@@ -14,6 +15,7 @@ import Button from "../../components/Button";
 import FilterPanel from "../../components/FilterPanel";
 
 import "./index.css";
+import ChargePointLegend from "../../components/ChargePointLegend";
 
 const mappingColors = (time) => {
   const times = {
@@ -42,6 +44,8 @@ const MapWrapper = () => {
   const [status, setStatus] = useState(0);
   const [chargePoints, setChargePoints] = useState([]);
   const [filterPanel, setFilterPanel] = useState(false);
+  const [initial, setInitial] = useState(true);
+  // const [never, setNever] = useState(false);
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -85,7 +89,7 @@ const MapWrapper = () => {
   );
 
   const toggleFilter = () => {
-    setFilterPanel(!filterPanel);
+    setFilterPanel(true);
   };
 
   const geolocate = new mapboxgl.GeolocateControl({
@@ -101,48 +105,62 @@ const MapWrapper = () => {
     showZoom: true,
   });
 
+  const quitLegend = () => setInitial(false);
+
   return (
     <>
-      <Map
-        // eslint-disable-next-line react/style-prop-object
-        style="mapbox://styles/mapbox/streets-v11"
-        containerStyle={{
-          height: "100vh",
-          width: "100vw",
-        }}
-        movingMethod="easeTo"
-        center={[lng, lat]}
-        zoom={[zoom]}
-        onStyleLoad={(map) => {
-          map.addControl(navigation, "bottom-left");
-          map.addControl(geolocate, "bottom-right");
-        }}
-        // onMoveEnd={handleMove}
-      >
-        <Cluster ClusterMarkerFactory={clusterMarker} zoomOnClick={true}>
-          {chargePoints &&
-            chargePoints.map((chargePoint) => (
-              <Marker
-                key={chargePoint.id}
-                coordinates={[chargePoint.longitude, chargePoint.latitude]}
-                onClick={() => click(chargePoint)}
-                anchor="top"
-              >
-                <div
-                  className="marker"
-                  style={{
-                    backgroundColor: mappingColors(chargePoint.waiting_time),
-                  }}
-                ></div>
-              </Marker>
-            ))}
-        </Cluster>
-      </Map>
-      <div className="buttons-div">
-        <Button text="Planificar Ruta" />
-        <Button text="Filtrado" toggleFilter={toggleFilter} />
-        {filterPanel && <FilterPanel />}
-      </div>
+      {initial /*&& !never*/ ? (
+        <ChargePointLegend quitLegend={quitLegend} />
+      ) : (
+        <>
+          <Map
+            // eslint-disable-next-line react/style-prop-object
+            style="mapbox://styles/mapbox/streets-v11"
+            containerStyle={{
+              height: "100vh",
+              width: "100vw",
+            }}
+            movingMethod="easeTo"
+            center={[lng, lat]}
+            zoom={[zoom]}
+            onStyleLoad={(map) => {
+              map.addControl(navigation, "bottom-left");
+              map.addControl(geolocate, "bottom-right");
+            }}
+            // onMoveEnd={handleMove}
+          >
+            <Cluster
+              ClusterMarkerFactory={clusterMarker}
+              zoomOnClick={true}
+              key={uuid()}
+            >
+              {chargePoints &&
+                chargePoints.map((chargePoint) => (
+                  <Marker
+                    key={chargePoint.id}
+                    coordinates={[chargePoint.longitude, chargePoint.latitude]}
+                    onClick={() => click(chargePoint)}
+                    anchor="top"
+                  >
+                    <div
+                      className="marker"
+                      style={{
+                        backgroundColor: mappingColors(
+                          chargePoint.waiting_time
+                        ),
+                      }}
+                    ></div>
+                  </Marker>
+                ))}
+            </Cluster>
+          </Map>
+          <div className="buttons-div">
+            <Button text="Planificar Ruta" />
+            <Button text="Filtrado" toggleFilter={toggleFilter} />
+            {filterPanel && <FilterPanel setFilterPanel={setFilterPanel} />}
+          </div>
+        </>
+      )}
     </>
   );
 };
