@@ -1,24 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import { Route, Switch } from "react-router";
+import "./App.css";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Profile from "./pages/Profile";
+import SignUp from "./pages/SignUp";
+import Map from "./pages/Map";
+import Footer from "./components/Footer";
+
+import { UserContext, useUser } from "./store";
+import useAuthentication from "./hooks/useAuthentication";
+import "react-toastify/dist/ReactToastify.css";
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import SingleUserCar from "./pages/SingleUserCar";
 
 function App() {
+  const userContextData = useUser();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <UserContext.Provider value={userContextData}>
+      <div className="App">
+        <Switch>
+          <Route path="/profile" exact>
+            <Profile />
+          </Route>
+
+          <Route path="/login" exact>
+            <Login />
+          </Route>
+
+          <Route path="/signup" exact>
+            <SignUp />
+          </Route>
+
+          <Route path="/map" exact>
+            <Map />
+          </Route>
+
+          <Route path="/" exact>
+            <Home />
+          </Route>
+
+          <Route path="/settings/:userCarId">
+            <SingleUserCar />
+          </Route>
+        </Switch>
+        <Footer />
+      </div>
+    </UserContext.Provider>
   );
 }
 

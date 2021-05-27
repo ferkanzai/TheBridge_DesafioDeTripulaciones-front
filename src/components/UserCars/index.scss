@@ -1,0 +1,47 @@
+.primaryCar {
+  border: 1px solid green;
+}
+
+.userCars {
+  margin: 10px;
+
+  & > h3 {
+    margin: 0 16px;
+  }
+
+  &__cars {
+    display: flex;
+    overflow-x: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    &__car {
+      // width: 165px;
+      height: 145px;
+      border: 1px solid black;
+      margin: 15px;
+      text-align: center;
+      position: relative;
+      border-radius: 5px;
+
+      &__alias {
+        margin: 0;
+      }
+
+      &__settings {
+        position: absolute;
+        top: 7px;
+        right: 7px;
+      }
+    }
+
+    &__primaryCar {
+      border: 2px solid green;
+    }
+  }
+}
