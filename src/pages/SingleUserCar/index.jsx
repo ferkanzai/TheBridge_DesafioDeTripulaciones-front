@@ -105,7 +105,7 @@ const SingleUserCar = () => {
                 name="primary"
                 {...register("primary")}
               />
-              <label for="primary">Seleccionar como coche principal</label>
+              <label htmlFor="primary">Seleccionar como coche principal</label>
             </div>
           )}
           <div className="singleCar__car__form__buttons">
