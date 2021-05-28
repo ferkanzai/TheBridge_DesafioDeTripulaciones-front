@@ -7,7 +7,7 @@ import "mapbox-gl/dist/svg/mapboxgl-ctrl-zoom-out.svg";
 import { useEffect, useState } from "react";
 import ReactMapboxGl, { Marker, Cluster } from "react-mapbox-gl";
 import mapboxgl from "mapbox-gl";
-import { uuid } from "uuidv4";
+import { v4 as uuid } from "uuid";
 
 import { getChargePoints } from "../../services/charge-points";
 
@@ -66,10 +66,8 @@ const MapWrapper = () => {
   }, [status]);
 
   useEffect(() => {
-    if (lat && lng) {
-      getChargePoints().then((res) => setChargePoints(res));
-    }
-  }, [lat, lng]);
+    getChargePoints().then((res) => setChargePoints(res));
+  }, []);
 
   // const handleMove = (map) => {
   //   console.log(map.getCenter());
@@ -126,38 +124,72 @@ const MapWrapper = () => {
             onStyleLoad={(map) => {
               map.addControl(navigation, "bottom-left");
               map.addControl(geolocate, "bottom-right");
+
+              geolocate.on("geolocate", function (pos) {
+                setLat(pos.coords.latitude);
+                setLng(pos.coords.longitude);
+              });
             }}
             // onMoveEnd={handleMove}
           >
-            <Cluster
-              ClusterMarkerFactory={clusterMarker}
-              zoomOnClick={true}
-              key={uuid()}
-            >
-              {chargePoints &&
-                chargePoints.map((chargePoint) => (
-                  <Marker
-                    key={chargePoint.id}
-                    coordinates={[chargePoint.longitude, chargePoint.latitude]}
-                    onClick={() => click(chargePoint)}
-                    anchor="top"
-                  >
-                    <div
-                      className="marker"
-                      style={{
-                        backgroundColor: mappingColors(
-                          chargePoint.waiting_time
-                        ),
-                      }}
-                    ></div>
-                  </Marker>
-                ))}
-            </Cluster>
+            {chargePoints.length > 25 ? (
+              <Cluster
+                ClusterMarkerFactory={clusterMarker}
+                zoomOnClick={true}
+                key={uuid()}
+              >
+                {chargePoints &&
+                  chargePoints.map((chargePoint) => (
+                    <Marker
+                      key={chargePoint.id}
+                      coordinates={[
+                        chargePoint.longitude,
+                        chargePoint.latitude,
+                      ]}
+                      onClick={() => click(chargePoint)}
+                      anchor="top"
+                    >
+                      <div
+                        className="marker"
+                        style={{
+                          backgroundColor: mappingColors(
+                            chargePoint.waiting_time
+                          ),
+                        }}
+                      ></div>
+                    </Marker>
+                  ))}
+              </Cluster>
+            ) : (
+              chargePoints &&
+              chargePoints.map((chargePoint) => (
+                <Marker
+                  key={chargePoint.id}
+                  coordinates={[chargePoint.longitude, chargePoint.latitude]}
+                  onClick={() => click(chargePoint)}
+                  anchor="top"
+                >
+                  <div
+                    className="marker"
+                    style={{
+                      backgroundColor: mappingColors(chargePoint.waiting_time),
+                    }}
+                  ></div>
+                </Marker>
+              ))
+            )}
           </Map>
           <div className="buttons-div">
             <Button text="Planificar Ruta" />
             <Button text="Filtrado" toggleFilter={toggleFilter} />
-            {filterPanel && <FilterPanel setFilterPanel={setFilterPanel} />}
+            {filterPanel && (
+              <FilterPanel
+                setFilterPanel={setFilterPanel}
+                lat={lat}
+                lng={lng}
+                setChargePoints={setChargePoints}
+              />
+            )}
           </div>
         </>
       )}

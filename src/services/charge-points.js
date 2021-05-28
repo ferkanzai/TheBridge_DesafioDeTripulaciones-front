@@ -8,3 +8,24 @@ export const getChargePoints = async () => {
 
   return response.data.data;
 };
+
+export const getFilteredChargePoints = async (
+  lat,
+  lng,
+  distance,
+  rating,
+  connections,
+  operators
+) => {
+  const response = await axios.get(
+    `${API_URL}/charge-points/filter?rating=${rating}&distance=${distance}&latitude=${lat}&longitude=${lng}&connections=${connections}&operators=${operators}`
+  );
+
+  console.log(
+    `${API_URL}/charge-points/filter?rating=${rating}&distance=${distance}&latitude=${lat}&longitude=${lng}&connections=${connections}&operators=${operators}`
+  );
+
+  console.log(response);
+
+  return response.data.data;
+};
