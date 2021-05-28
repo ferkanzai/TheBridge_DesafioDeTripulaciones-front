@@ -17,6 +17,10 @@ import FilterPanel from "../../components/FilterPanel";
 import "./index.css";
 import ChargePointLegend from "../../components/ChargePointLegend";
 
+mapboxgl.workerClass =
+  // eslint-disable-next-line import/no-webpack-loader-syntax
+  require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
+
 const mappingColors = (time) => {
   const times = {
     [time === 0]: "#1DAE69",
