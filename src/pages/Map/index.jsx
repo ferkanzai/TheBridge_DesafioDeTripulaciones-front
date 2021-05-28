@@ -40,7 +40,7 @@ const Map = ReactMapboxGl({
 const MapWrapper = () => {
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
-  const [zoom, setZoom] = useState(13);
+  // const [zoom, setZoom] = useState(13);
   const [status, setStatus] = useState(0);
   const [chargePoints, setChargePoints] = useState([]);
   const [filterPanel, setFilterPanel] = useState(false);
@@ -120,7 +120,7 @@ const MapWrapper = () => {
             }}
             movingMethod="easeTo"
             center={[lng, lat]}
-            zoom={[zoom]}
+            zoom={[13]}
             onStyleLoad={(map) => {
               map.addControl(navigation, "bottom-left");
               map.addControl(geolocate, "bottom-right");
