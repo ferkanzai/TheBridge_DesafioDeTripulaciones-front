@@ -1,5 +1,5 @@
 const Home = () => {
-  return <h1>Bienvenid@ a The Bridge Auth</h1>;
+  return <h1>Coches eléctricos</h1>;
 };
 
 export default Home;
