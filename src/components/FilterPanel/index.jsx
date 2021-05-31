@@ -1,32 +1,76 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import Rating from "@material-ui/lab/Rating";
 
 import OperatorsMenu from "../OperatorsMenu";
-import { getFilteredChargePoints } from "../../services/charge-points";
+import {
+  getFilteredAndCompatibleChargePoints,
+  getFilteredChargePoints,
+} from "../../services/charge-points";
+import { UserContext } from "../../store";
+import { getUserCars } from "../../services/users";
 
 const FilterPanel = ({ setFilterPanel, lat, lng, setChargePoints }) => {
+  let { token } = useContext(UserContext);
   const methods = useForm();
   const [message, setMessage] = useState(false);
+  const [userCarIds, setUserCarIds] = useState([]);
+  const [userPrimaryCarId, setUserPrimaryCarId] = useState([]);
+
+  token = localStorage.getItem("access_token");
+
+  useEffect(() => {
+    if (token)
+      getUserCars(token).then((res) => {
+        setUserCarIds(Array.from(new Set(res.map((car) => car.car_id))));
+        setUserPrimaryCarId(
+          res.filter((car) => car.is_primary_car).map((car) => car.car_id)
+        );
+      });
+  }, []);
 
   const handleFormSubmit = (v) => {
     console.log(v);
-    getFilteredChargePoints(
-      lat,
-      lng,
-      v.distance,
-      v.rating,
-      v.connections,
-      v.operators
-    ).then((res) => {
-      console.log(res);
-      if (res.length === 0) {
-        setMessage(true);
-      } else {
-        setChargePoints(res);
-        setFilterPanel(false);
-      }
-    });
+    const carIds = v.cars && (v.cars === "all" ? userCarIds : userPrimaryCarId);
+    console.log(carIds);
+
+    if (carIds) {
+      getFilteredAndCompatibleChargePoints(
+        token,
+        lat,
+        lng,
+        v.distance,
+        v.rating,
+        v.connections,
+        v.operators,
+        carIds
+      ).then((res) => {
+        console.log(res);
+        if (res.length === 0) {
+          setMessage(true);
+        } else {
+          setChargePoints(res);
+          setFilterPanel(false);
+        }
+      });
+    } else {
+      getFilteredChargePoints(
+        lat,
+        lng,
+        v.distance,
+        v.rating,
+        v.connections,
+        v.operators
+      ).then((res) => {
+        console.log(res);
+        if (res.length === 0) {
+          setMessage(true);
+        } else {
+          setChargePoints(res);
+          setFilterPanel(false);
+        }
+      });
+    }
   };
 
   const handleReset = () => {
@@ -87,6 +131,30 @@ const FilterPanel = ({ setFilterPanel, lat, lng, setChargePoints }) => {
               {...methods.register("connections")}
             />
             <label htmlFor="3">3 o mas</label>
+            {token && (
+              <>
+                <label htmlFor="primaryCar">
+                  Sólo compatibles con mi coche primario
+                </label>
+                <input
+                  type="radio"
+                  id="primaryCar"
+                  name="cars"
+                  value="primary"
+                  {...methods.register("cars")}
+                />
+                <label htmlFor="allCars">
+                  Compatibles con todos mis coches
+                </label>
+                <input
+                  type="radio"
+                  id="allCars"
+                  name="cars"
+                  value="all"
+                  {...methods.register("cars")}
+                />
+              </>
+            )}
           </div>
           <div className="filter-panel__options__buttons">
             <button type="submit">Filtrar</button>
