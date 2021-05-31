@@ -13,13 +13,15 @@
   z-index: 0;
 } */
 
-/* .mapboxgl-ctrl-bottom-left {
-  z-index: 8;
+.mapboxgl-ctrl-bottom-left {
+  z-index: 7;
+  bottom: 0px;
 }
 
 .mapboxgl-ctrl-bottom-right {
-  z-index: 8;
-} */
+  z-index: 7;
+  bottom: 9px;
+}
 
 .buttons-div {
   width: 100%;
@@ -42,6 +44,7 @@
   display: flex;
   text-align: center;
   justify-content: center;
+  cursor: pointer;
 }
 
 .filter-button {
@@ -66,4 +69,22 @@
   width: 15px;
   height: 15px;
   border-radius: 50%;
+  cursor: pointer;
+}
+
+.chargePointInformation {
+  width: 100%;
+  position: absolute;
+  bottom: 56px;
+  left: 0;
+  background-color: white;
+  z-index: 9;
+  height: 45%;
+
+  &__image {
+    position: inherit;
+    right: 5px;
+    top: -75px;
+    z-index: 10;
+  }
 }

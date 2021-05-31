@@ -4,18 +4,22 @@ import "mapbox-gl/dist/svg/mapboxgl-ctrl-geolocate.svg";
 import "mapbox-gl/dist/svg/mapboxgl-ctrl-zoom-in.svg";
 import "mapbox-gl/dist/svg/mapboxgl-ctrl-zoom-out.svg";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ReactMapboxGl, { Marker, Cluster } from "react-mapbox-gl";
 import mapboxgl from "mapbox-gl";
+import Rating from "@material-ui/lab/Rating";
 import { v4 as uuid } from "uuid";
-
-import { getChargePoints } from "../../services/charge-points";
 
 import Button from "../../components/Button";
 import FilterPanel from "../../components/FilterPanel";
-
-import "./index.css";
 import ChargePointLegend from "../../components/ChargePointLegend";
+import { UserContext } from "../../store";
+
+import { getChargePoints } from "../../services/charge-points";
+import { postStartReservation } from "../../services/reservations";
+
+import charging from "../../charging.png";
+import "./index.scss";
 
 mapboxgl.workerClass =
   // eslint-disable-next-line import/no-webpack-loader-syntax
@@ -42,14 +46,22 @@ const Map = ReactMapboxGl({
 });
 
 const MapWrapper = () => {
+  let { token } = useContext(UserContext);
+
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
-  // const [zoom, setZoom] = useState(13);
+  const [userLat, setUserLat] = useState(null);
+  const [userLng, setUserLng] = useState(null);
+  const [zoom, setZoom] = useState(13);
   const [status, setStatus] = useState(0);
   const [chargePoints, setChargePoints] = useState([]);
   const [filterPanel, setFilterPanel] = useState(false);
   const [initial, setInitial] = useState(true);
+  const [chargePointInformation, setChargePointInformation] = useState(false);
+  const [singleChargePoint, setSingleChargePoint] = useState(null);
   // const [never, setNever] = useState(false);
+
+  token = localStorage.getItem("access_token");
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -58,7 +70,9 @@ const MapWrapper = () => {
         navigator.geolocation.getCurrentPosition(
           (position) => {
             setStatus(11);
+            setUserLat(position.coords.latitude);
             setLat(position.coords.latitude);
+            setUserLng(position.coords.longitude);
             setLng(position.coords.longitude);
           },
           () => {
@@ -70,8 +84,8 @@ const MapWrapper = () => {
   }, [status]);
 
   useEffect(() => {
-    getChargePoints().then((res) => setChargePoints(res));
-  }, []);
+    getChargePoints(userLat, userLng).then((res) => setChargePoints(res));
+  }, [userLat, userLng]);
 
   // const handleMove = (map) => {
   //   console.log(map.getCenter());
@@ -82,6 +96,10 @@ const MapWrapper = () => {
   //   setZoom(zoom);
   // };
 
+  const handleReservation = (connectionId) => {
+    postStartReservation(token, connectionId);
+  };
+
   const click = (chargePoint) => alert(chargePoint.name);
 
   const clusterMarker = (coordinates, points) => (
@@ -89,6 +107,20 @@ const MapWrapper = () => {
       {points}
     </Marker>
   );
+
+  const showChargePointInformation = (chargePoint) => {
+    console.log(chargePoint);
+    setChargePointInformation(true);
+    setLat(chargePoint.latitude);
+    setLng(chargePoint.longitude);
+    setZoom(14.5);
+    setSingleChargePoint(chargePoint);
+  };
+
+  const hideChargePointInformation = () => {
+    setChargePointInformation(false);
+    setSingleChargePoint({});
+  };
 
   const toggleFilter = () => {
     setFilterPanel(true);
@@ -109,6 +141,16 @@ const MapWrapper = () => {
 
   const quitLegend = () => setInitial(false);
 
+  const setCenter = (map) => {
+    console.log(map.getCenter());
+    console.log(map.getZoom());
+    // const { lng, lat } = map.getCenter();
+    // const zoom = map.getZoom();
+    // setLat(lat);
+    // setLng(lng);
+    // setZoom(zoom);
+  };
+
   return (
     <>
       {initial /*&& !never*/ ? (
@@ -124,7 +166,7 @@ const MapWrapper = () => {
             }}
             movingMethod="easeTo"
             center={[lng, lat]}
-            zoom={[13]}
+            zoom={[zoom]}
             onStyleLoad={(map) => {
               map.addControl(navigation, "bottom-left");
               map.addControl(geolocate, "bottom-right");
@@ -134,7 +176,11 @@ const MapWrapper = () => {
                 setLng(pos.coords.longitude);
               });
             }}
-            // onMoveEnd={handleMove}
+            onMoveEnd={(map) => setCenter(map)}
+            // onDragEnd={() =>
+            //   chargePointInformation ? setChargePointInformation(false) : null
+            // }
+            // onMove={() => setChargePointInformation(!chargePointInformation)}
           >
             {chargePoints.length > 25 ? (
               <Cluster
@@ -150,7 +196,7 @@ const MapWrapper = () => {
                         chargePoint.longitude,
                         chargePoint.latitude,
                       ]}
-                      onClick={() => click(chargePoint)}
+                      onClick={() => showChargePointInformation(chargePoint)}
                       anchor="top"
                     >
                       <div
@@ -170,7 +216,7 @@ const MapWrapper = () => {
                 <Marker
                   key={chargePoint.id}
                   coordinates={[chargePoint.longitude, chargePoint.latitude]}
-                  onClick={() => click(chargePoint)}
+                  onClick={() => showChargePointInformation(chargePoint)}
                   anchor="top"
                 >
                   <div
@@ -195,6 +241,35 @@ const MapWrapper = () => {
               />
             )}
           </div>
+
+          {chargePointInformation && (
+            <div className={`chargePointInformation`}>
+              <img
+                src={charging}
+                alt="charging"
+                className="chargePointInformation__image"
+              />
+              <p>{singleChargePoint.name}</p>
+              <p>tiempo de espera: {singleChargePoint.waiting_time} minutos</p>
+              <p>Operador: {singleChargePoint.operator}</p>
+              <p>Distancia: {singleChargePoint.distance.toFixed(2)} km</p>
+              <p>Precio de carga ({singleChargePoint.price.toFixed(2)}€/min)</p>
+              <p>Valoraciones de los usuarios:</p>
+              <Rating
+                defaultValue={singleChargePoint.rating || 0}
+                readOnly={true}
+              />
+              <p>({singleChargePoint.votes})</p>
+              <p>
+                Última revisión técnica del cargador:{" "}
+                {singleChargePoint.last_verified
+                  ? new Date(singleChargePoint.last_verified).toLocaleString()
+                  : "No disponible"}
+              </p>
+              <button onClick={hideChargePointInformation}>Cancelar</button>
+              <button onClick={handleReservation}>Reservar</button>
+            </div>
+          )}
         </>
       )}
     </>
