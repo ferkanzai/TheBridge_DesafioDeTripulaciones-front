@@ -14,6 +14,7 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import SingleUserCar from "./pages/SingleUserCar";
 import WithAuthentication from "./components/hocs/WithAuthentication";
 import WithNavBar from "./components/hocs/WithNavBar";
+import Start from "./pages/Start";
 
 function App() {
   const userContextData = useUser();
@@ -31,15 +32,11 @@ function App() {
           </Route>
 
           <Route path="/login" exact>
-            <WithNavBar>
-              <Login />
-            </WithNavBar>
+            <Login />
           </Route>
 
           <Route path="/signup" exact>
-            <WithNavBar>
-              <SignUp />
-            </WithNavBar>
+            <SignUp />
           </Route>
 
           <Route path="/map" exact>
@@ -50,11 +47,20 @@ function App() {
 
           <Route path="/settings/:userCarId">
             <WithAuthentication>
-              <SingleUserCar />
+              <WithNavBar>
+                <SingleUserCar />
+              </WithNavBar>
             </WithAuthentication>
           </Route>
-        </Switch>
-        <Switch>
+
+          <Route path="/start" exact>
+            <WithAuthentication>
+              <WithNavBar>
+                <Start />
+              </WithNavBar>
+            </WithAuthentication>
+          </Route>
+
           <Route path="/" exact>
             <Home />
           </Route>
