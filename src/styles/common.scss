@@ -1,0 +1,25 @@
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.buttons {
+  @extend .flex-center;
+  padding: 0.87rem 4rem;
+  border-radius: 0.5rem;
+  margin: 0.5rem;
+  max-width: 190px;
+}
+
+@mixin blue-button {
+  @extend .buttons;
+  background-color: #638fe3;
+  color: #2e3454;
+}
+
+@mixin white-button {
+  @extend .buttons;
+  background-color: #e0e0e0;
+  color: #638fe3;
+}
