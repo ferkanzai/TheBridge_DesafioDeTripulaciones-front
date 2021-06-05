@@ -1,80 +1,27 @@
-import out from "../../svg/out.svg";
+import close from "../../svg/close.svg";
+
 import "./index.scss";
+import SingleChargePoint from "../SingleChargePoint";
 
 const ChargePointLegend = ({ quitLegend }) => {
   return (
     <div className="chargePointLegend">
       <h2 className="chargePointLegend__title">
-        tiempos de espera en puntos de carga
+        Tiempos de espera en puntos de carga
       </h2>
       <div className="chargePointLegend__legend">
-        <div className="chargePointLegend__legend__type">
-          <div className="chargePointLegend__legend__type__icon">
-            <div className="chargePointLegend__legend__type__icon__box"></div>
-            <div className="chargePointLegend__legend__type__icon__circle chargePointLegend__legend__type__icon__circle--free"></div>
-          </div>
-          <p className="chargePointLegend__legend__type__text">libre</p>
-        </div>
-        <div className="chargePointLegend__legend__type">
-          <div className="chargePointLegend__legend__type__icon">
-            <div className="chargePointLegend__legend__type__icon__box"></div>
-            <div className="chargePointLegend__legend__type__icon__circle chargePointLegend__legend__type__icon__circle--one"></div>
-          </div>
-          <p className="chargePointLegend__legend__type__text">
-            menos de 5 minutos
-          </p>
-        </div>
-        <div className="chargePointLegend__legend__type">
-          <div className="chargePointLegend__legend__type__icon">
-            <div className="chargePointLegend__legend__type__icon__box"></div>
-            <div className="chargePointLegend__legend__type__icon__circle chargePointLegend__legend__type__icon__circle--two"></div>
-          </div>
-          <p className="chargePointLegend__legend__type__text">
-            de 5 a 15 minutos
-          </p>
-        </div>
-        <div className="chargePointLegend__legend__type">
-          <div className="chargePointLegend__legend__type__icon">
-            <div className="chargePointLegend__legend__type__icon__box"></div>
-            <div className="chargePointLegend__legend__type__icon__circle chargePointLegend__legend__type__icon__circle--three"></div>
-          </div>
-          <p className="chargePointLegend__legend__type__text">
-            de 15 a 30 minutos
-          </p>
-        </div>
-        <div className="chargePointLegend__legend__type">
-          <div className="chargePointLegend__legend__type__icon">
-            <div className="chargePointLegend__legend__type__icon__box"></div>
-            <div className="chargePointLegend__legend__type__icon__circle chargePointLegend__legend__type__icon__circle--four"></div>
-          </div>
-          <p className="chargePointLegend__legend__type__text">
-            de 30 a 45 minutos
-          </p>
-        </div>
-        <div className="chargePointLegend__legend__type">
-          <div className="chargePointLegend__legend__type__icon">
-            <div className="chargePointLegend__legend__type__icon__box"></div>
-            <div className="chargePointLegend__legend__type__icon__circle chargePointLegend__legend__type__icon__circle--five"></div>
-          </div>
-          <p className="chargePointLegend__legend__type__text">
-            mas de 45 minutos
-          </p>
-        </div>
-        <div className="chargePointLegend__legend__type">
-          <div className="chargePointLegend__legend__type__icon">
-            <div className="chargePointLegend__legend__type__icon__box"></div>
-            <img
-              src={out}
-              alt=""
-              className="chargePointLegend__legend__type__icon__out chargePointLegend__legend__type__icon__out--one"
-            />
-          </div>
-          <p className="chargePointLegend__legend__type__text">
-            fuera de servicio
-          </p>
-        </div>
+        <SingleChargePoint text="Libre" color="#1dae69" />
+        <SingleChargePoint text="Menos de 15 min" color="#c5d22a" />
+        <SingleChargePoint text="De 15 a 30 min" color="#fad966" />
+        <SingleChargePoint text="De 30 a 40 min" color="#B75454" />
+        <SingleChargePoint text="Fuera de servicio" color="out-of-service" />
       </div>
-      <button onClick={quitLegend}>Siguiente</button>
+      <img
+        src={close}
+        alt="close"
+        onClick={quitLegend}
+        className="chargePointLegend__close"
+      />
     </div>
   );
 };
