@@ -36,3 +36,16 @@ export const postSignUp = async (email, password, name) => {
 
   return response.data;
 };
+
+export const getFullProfile = async (token) => {
+  const config = {
+    headers: {
+      authorization: token,
+    },
+    withCredentials: true,
+  };
+
+  const response = await axios.get(`${API_URL}/auth/profile/full`, config);
+
+  return response.data.data;
+};

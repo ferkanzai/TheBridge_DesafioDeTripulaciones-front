@@ -1,0 +1,36 @@
+@import "../../styles/common.scss";
+
+.start {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background-image: url("../../start.png");
+  height: 100vh;
+  padding: 1rem;
+
+  &__title {
+    margin-bottom: 0.5rem;
+    margin-top: 5rem;
+    font-size: 1.75rem;
+    font-weight: 300;
+    color: #2e3454;
+  }
+
+  &__text {
+    margin: 0.5rem 0 1rem 0;
+    width: 12rem;
+    font-weight: 500;
+  }
+
+  &__button {
+    @include blue-button;
+    width: 80px;
+    padding: 0.87rem 2.5rem;
+    margin-left: 0;
+    margin-top: 1rem;
+  }
+
+  a {
+    text-decoration: none;
+  }
+}
