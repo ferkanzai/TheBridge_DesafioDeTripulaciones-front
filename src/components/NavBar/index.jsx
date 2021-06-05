@@ -26,7 +26,9 @@ const NavBar = () => {
       <Link to="/profile">
         <img
           src={
-            pathname === "/profile" || pathname.includes("/settings/")
+            pathname === "/profile" ||
+            pathname.includes("/settings/") ||
+            pathname === "/add-car"
               ? atProfile
               : profile
           }
