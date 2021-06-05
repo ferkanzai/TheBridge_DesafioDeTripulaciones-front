@@ -2,14 +2,15 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding-top: 6.25rem;
+  padding-top: 2rem;
   padding-left: 2rem;
-  padding-bottom: 5rem;
+  padding-bottom: 1rem;
   background-color: #e0e0e0;
   height: 100vh;
 
   &__title {
-    width: 250px;
+    width: 13rem;
+    margin-top: 0.5rem;
   }
 
   &__legend {
