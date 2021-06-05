@@ -1,21 +1,16 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getFullProfile } from "../../services/auth";
-
-import { UserContext } from "../../store";
 
 import "./index.scss";
 
 const Start = () => {
-  let { token } = useContext(UserContext);
-
   const [fullUser, setFullUser] = useState(null);
 
-  token = localStorage.getItem("access_token");
-
   useEffect(() => {
+    const token = localStorage.getItem("access_token");
     getFullProfile(token).then((res) => setFullUser(res));
-  }, [token]);
+  }, []);
 
   return (
     <div className="start">
