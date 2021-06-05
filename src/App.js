@@ -1,20 +1,20 @@
 import { Route, Switch } from "react-router";
-import "./App.css";
+
+import WithAuthentication from "./components/hocs/WithAuthentication";
+import WithNavBar from "./components/hocs/WithNavBar";
+
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import SignUp from "./pages/SignUp";
 import Map from "./pages/Map";
+import Start from "./pages/Start";
+import SingleUserCar from "./pages/SingleUserCar";
 
 import { UserContext } from "./store";
 import { useUser } from "./hooks/useUser";
 
-import "react-toastify/dist/ReactToastify.css";
-import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
-import SingleUserCar from "./pages/SingleUserCar";
-import WithAuthentication from "./components/hocs/WithAuthentication";
-import WithNavBar from "./components/hocs/WithNavBar";
-import Start from "./pages/Start";
+import "./App.scss";
 
 function App() {
   const userContextData = useUser();
