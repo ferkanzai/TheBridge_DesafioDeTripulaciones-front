@@ -27,7 +27,7 @@ const FilterPanel = ({ setFilterPanel, lat, lng, setChargePoints }) => {
           res.filter((car) => car.is_primary_car).map((car) => car.car_id)
         );
       });
-  }, []);
+  }, [token]);
 
   const handleFormSubmit = (v) => {
     console.log(v);
