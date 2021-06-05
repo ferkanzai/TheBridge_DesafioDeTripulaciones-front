@@ -1,15 +1,17 @@
-.flex-center {
+@mixin flex-center {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .buttons {
-  @extend .flex-center;
+  @include flex-center;
   padding: 0.87rem 4rem;
   border-radius: 0.5rem;
   margin: 0.5rem;
   max-width: 190px;
+  font-weight: bold;
+  font-size: 1rem;
 }
 
 @mixin blue-button {
@@ -22,4 +24,19 @@
   @extend .buttons;
   background-color: #e0e0e0;
   color: #638fe3;
+  border: 1px solid #638fe3;
+}
+
+@mixin grey-button {
+  @extend .buttons;
+  background-color: #bdbdbd;
+  color: #4f4f4f;
+}
+
+@mixin inputs {
+  border: none;
+  border-bottom: 1px solid #bdbdbd;
+  background-color: #3a426b;
+  margin: 0.5rem;
+  padding: 1rem 0;
 }
