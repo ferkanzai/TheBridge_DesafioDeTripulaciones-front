@@ -100,8 +100,6 @@ const MapWrapper = () => {
     postStartReservation(token, connectionId);
   };
 
-  const click = (chargePoint) => alert(chargePoint.name);
-
   const clusterMarker = (coordinates, points) => (
     <Marker coordinates={coordinates} className="cluster" maxZoom={14}>
       {points}
