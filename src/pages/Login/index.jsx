@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 
 import { UserContext } from "../../store";
 
-import "./styles.scss";
+import "./index.scss";
 
 import eyeNotVisible from "../../svg/eyeNotVisible.svg";
 import eyeVisible from "../../svg/eyeVisible.svg";
