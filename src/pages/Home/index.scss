@@ -1,7 +1,6 @@
 @import "../../styles/common.scss";
 
 .home {
-  position: relative;
   background-image: url("../../home.jpg");
   background-repeat: no-repeat;
   background-position: center;
@@ -17,6 +16,7 @@
     bottom: 1.5rem;
     width: 90%;
     display: flex;
+    align-items: center;
     flex-direction: column;
 
     &__title {
@@ -28,10 +28,12 @@
 
     &__signup {
       @include blue-button;
+      width: 100%;
     }
 
     &__login {
       @include white-button;
+      width: 100%;
     }
 
     &__continue {
