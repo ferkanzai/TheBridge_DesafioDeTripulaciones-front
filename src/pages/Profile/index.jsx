@@ -1,36 +1,17 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-import { UserContext } from "../../store";
-
-import { postAddUserCar } from "../../services/users";
 import { getFullProfile } from "../../services/auth";
-
-import AddUserCar from "../../components/AddUserCar";
-import UserCars from "../../components/UserCars";
 
 import profileIcon from "../../svg/profile-icon.svg";
 import LinksList from "../../components/LinksList";
 
 const Profile = () => {
   const [fullUser, setFullUser] = useState(null);
-  let { token } = useContext(UserContext);
-
-  const [carToAdd, setCarToAdd] = useState(null);
-
-  token = localStorage.getItem("access_token");
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
     getFullProfile(token).then((res) => setFullUser(res));
   }, []);
-
-  const handleFormSubmit = (formValues, resetCb) => {
-    postAddUserCar(token, formValues.car).then((res) => {
-      setCarToAdd(res[0]);
-      // setUserCars((prevUserCars) => [...prevUserCars, res[0]]);
-      resetCb();
-    });
-  };
 
   return (
     <div className="profile">
@@ -49,8 +30,6 @@ const Profile = () => {
         </div>
       </div>
       <LinksList />
-      <AddUserCar message="Añadir" handleFormSubmit={handleFormSubmit} />
-      <UserCars carToAdd={carToAdd} />
     </div>
   );
 };

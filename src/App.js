@@ -15,6 +15,7 @@ import { UserContext } from "./store";
 import { useUser } from "./hooks/useUser";
 
 import "./App.scss";
+import AddCar from "./pages/AddCar";
 
 function App() {
   const userContextData = useUser();
@@ -63,6 +64,14 @@ function App() {
 
           <Route path="/" exact>
             <Home />
+          </Route>
+
+          <Route path="/add-car">
+            <WithAuthentication>
+              <WithNavBar>
+                <AddCar />
+              </WithNavBar>
+            </WithAuthentication>
           </Route>
         </Switch>
       </div>
