@@ -2,8 +2,10 @@
 
 .home {
   position: relative;
-  background-image: url("../../home.png");
+  background-image: url("../../home.jpg");
   background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
   height: 100vh;
   display: flex;
   justify-content: center;

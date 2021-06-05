@@ -25,7 +25,7 @@ const Login = () => {
   return (
     <>
       {user ? (
-        <Redirect to="/profile" />
+        <Redirect to="/start" />
       ) : (
         <div className="login">
           <div className="login__title">
