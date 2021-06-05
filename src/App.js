@@ -5,7 +5,6 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import SignUp from "./pages/SignUp";
 import Map from "./pages/Map";
-import Footer from "./components/Footer";
 
 import { UserContext } from "./store";
 import { useUser } from "./hooks/useUser";
@@ -14,6 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import SingleUserCar from "./pages/SingleUserCar";
 import WithAuthentication from "./components/hocs/WithAuthentication";
+import WithNavBar from "./components/hocs/WithNavBar";
 
 function App() {
   const userContextData = useUser();
@@ -24,24 +24,28 @@ function App() {
         <Switch>
           <Route path="/profile" exact>
             <WithAuthentication>
-              <Profile />
+              <WithNavBar>
+                <Profile />
+              </WithNavBar>
             </WithAuthentication>
           </Route>
 
           <Route path="/login" exact>
-            <Login />
+            <WithNavBar>
+              <Login />
+            </WithNavBar>
           </Route>
 
           <Route path="/signup" exact>
-            <SignUp />
+            <WithNavBar>
+              <SignUp />
+            </WithNavBar>
           </Route>
 
           <Route path="/map" exact>
-            <Map />
-          </Route>
-
-          <Route path="/" exact>
-            <Home />
+            <WithNavBar>
+              <Map />
+            </WithNavBar>
           </Route>
 
           <Route path="/settings/:userCarId">
@@ -50,7 +54,11 @@ function App() {
             </WithAuthentication>
           </Route>
         </Switch>
-        <Footer />
+        <Switch>
+          <Route path="/" exact>
+            <Home />
+          </Route>
+        </Switch>
       </div>
     </UserContext.Provider>
   );
