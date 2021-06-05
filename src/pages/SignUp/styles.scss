@@ -1,0 +1,82 @@
+@import "../../styles/common.scss";
+
+.signup {
+  background-color: #2e3454;
+  height: 100vh;
+  width: 100%;
+
+  ::placeholder {
+    color: #68719f;
+  }
+
+  &__title {
+    align-items: flex-start;
+    display: flex;
+    margin: 0 auto;
+    max-width: 343px;
+    width: 90%;
+
+    p {
+      color: #638fe3;
+      font-size: 1.25rem;
+      margin: 0 0 1.25rem 0;
+      padding-top: 5rem;
+      width: 220px;
+    }
+  }
+
+  &__form {
+    @include flex-center;
+    flex-direction: column;
+    margin: 0 auto;
+    max-width: 343px;
+    position: relative;
+    width: 90%;
+
+    input {
+      @include inputs;
+      color: #638fe3;
+      padding-left: 1rem;
+      width: 100%;
+    }
+
+    input::-ms-reveal,
+    input::-ms-clear {
+      display: none;
+    }
+
+    &__eye {
+      position: absolute;
+      right: 1rem;
+      top: 148px;
+    }
+
+    &__forgot-password {
+      color: #bdbdbd;
+      font-size: 0.875rem;
+      font-weight: 300;
+      margin-left: auto;
+    }
+
+    &__button {
+      @include grey-button;
+      border: none;
+      outline: none;
+      text-decoration: none;
+    }
+
+    button:active {
+      border-style: outset;
+      border: none;
+      outline: none;
+      text-decoration: none;
+    }
+
+    &__label {
+      color: #bdbdbd;
+      font-weight: 300;
+      margin-right: auto;
+      margin-top: 2rem;
+    }
+  }
+}
