@@ -10,11 +10,9 @@ export function useUser() {
   const token = localStorage.getItem("access_token");
 
   useEffect(() => {
-    if (!token) history.push("/login");
-
     getProfile(token)
       .then((user) => setUser(user))
-      .catch((err) => err.code === 401 && history.push("/login"))
+      .catch((err) => err.code === 401 && history.push("/"))
       .finally(() => setLoadingUser(false));
   }, [history, token]);
 
@@ -25,8 +23,8 @@ export function useUser() {
     });
   };
 
-  const signUp = async (email, password) => {
-    postSignUp(email, password).then((res) => {
+  const signUp = async (email, password, name) => {
+    postSignUp(email, password, name).then((res) => {
       setUser(res.data);
       localStorage.setItem("access_token", res.token);
     });
