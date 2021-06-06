@@ -3,8 +3,7 @@ import { useContext } from "react";
 import { UserContext } from "../../store";
 
 const Reservations = () => {
-  const { token, activeReservation, setActiveReservation } =
-    useContext(UserContext);
+  const { activeReservation } = useContext(UserContext);
 
   const getMin = () => {
     const reservationTime = new Date(
