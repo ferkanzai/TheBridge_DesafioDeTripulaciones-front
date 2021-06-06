@@ -11,6 +11,7 @@ import gear from "../../svg/gear.svg";
 import paper from "../../svg/paper.svg";
 import info from "../../svg/info.svg";
 import exit from "../../svg/exit.svg";
+import creditCard from "../../svg/credit-card.svg";
 
 const LinksList = () => {
   const { logout } = useContext(UserContext);
@@ -28,6 +29,7 @@ const LinksList = () => {
         path="/charge-points/favorites"
       />
       <SingleLink icon={friends} text="Invitar amigos" path="/invite" />
+      <SingleLink icon={creditCard} text="Métodos de pago" path="/payments" />
       <SingleLink icon={gear} text="Configuración" path="/config" />
       <SingleLink icon={paper} text="Términos y condiciones" path="/terms" />
       <SingleLink
