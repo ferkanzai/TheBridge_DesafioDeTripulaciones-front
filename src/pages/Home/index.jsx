@@ -4,6 +4,8 @@ import { Redirect } from "react-router";
 
 import { UserContext } from "../../store";
 
+import logo from "../../logo.png";
+
 import "./index.scss";
 
 const Home = () => {
@@ -13,6 +15,7 @@ const Home = () => {
     <>
       {!user ? (
         <div className="home">
+          <img src={logo} alt="plug and trip logo" className="home__logo" />
           <div className="home__content">
             <h1 className="home__content__title">
               Viaja largos trayectos con tu vehículo eléctrico

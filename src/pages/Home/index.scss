@@ -1,19 +1,27 @@
 @import "../../styles/common.scss";
 
 .home {
-  background-image: url("../../home.jpg");
+  background-attachment: fixed;
   background-repeat: no-repeat;
-  background-position: center;
+  background: linear-gradient(
+      0deg,
+      rgba(46, 52, 84, 0.59),
+      rgba(46, 52, 84, 0.59)
+    ),
+    url("../../home.jpg");
+  background-position: -100px;
   background-size: cover;
   height: 100vh;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: hidden;
   display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  margin-bottom: 2rem;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5rem 0 1.5rem 0;
 
   &__content {
-    position: absolute;
-    bottom: 1.5rem;
     width: 90%;
     display: flex;
     align-items: center;
@@ -21,14 +29,17 @@
 
     &__title {
       font-size: 2rem;
-      margin: 1.5rem 0.5rem;
+      font-weight: 700;
+      margin: 1rem 0;
       color: #f2f2f2;
-      max-width: 340px;
+      max-width: 95%;
     }
 
     &__signup {
-      @include blue-button;
+      @include blue-green-button;
       width: 100%;
+      margin-left: 0;
+      margin-right: 0;
     }
 
     &__login {
@@ -37,11 +48,8 @@
     }
 
     &__continue {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 0.5rem;
       color: #e0e0e0;
+      margin-top: 0.25rem;
     }
 
     a {

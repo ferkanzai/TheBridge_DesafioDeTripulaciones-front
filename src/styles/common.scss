@@ -10,7 +10,7 @@
   border-radius: 0.5rem;
   margin: 0.5rem;
   max-width: 190px;
-  font-weight: bold;
+  font-weight: 600;
   font-size: 1rem;
   border: none;
 }
@@ -24,14 +24,20 @@
 @mixin white-button {
   @extend .buttons;
   background-color: #e0e0e0;
-  color: #638fe3;
-  border: 1px solid #638fe3;
+  color: #50b7af;
+  border: 1px solid #50b7af;
 }
 
 @mixin grey-button {
   @extend .buttons;
   background-color: #bdbdbd;
   color: #4f4f4f;
+}
+
+@mixin blue-green-button {
+  @extend .buttons;
+  background-color: #50b7af;
+  color: #2e3454;
 }
 
 @mixin grey-blue-button {
