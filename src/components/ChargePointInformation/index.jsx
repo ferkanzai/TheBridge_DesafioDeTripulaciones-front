@@ -93,12 +93,14 @@ const ChargePointInformation = ({
   const history = useHistory();
 
   useEffect(() => {
-    let id = setInterval(() => {
-      setWatch(new Date());
-    }, 6000);
+    if (activeReservation) {
+      let id = setInterval(() => {
+        setWatch(new Date());
+      }, 6000);
 
-    return () => clearInterval(id);
-  }, []);
+      return () => clearInterval(id);
+    }
+  }, [activeReservation]);
 
   const handleReservation = () => {
     if (!user) {
@@ -173,7 +175,11 @@ const ChargePointInformation = ({
 
     const min = Number((reservationTime - watch) / 1000 / 60);
 
-    if (min <= 0) setReservationOk(false);
+    if (min.toFixed(0) <= 0) {
+      setReservationOk(false);
+      setActiveReservation(null);
+      return;
+    }
 
     return min.toFixed(0);
   };
@@ -296,32 +302,31 @@ const ChargePointInformation = ({
           TIENE RESERVAS ACTIVAS
         </p>
       </div>
-      <div
-        className="chargePointInformation__ok"
-        style={reservationOk && isReservationPage ? null : { display: "none" }}
-      >
-        <div className="chargePointInformation__ok__info">
-          <p className="chargePointInformation__ok__info__text">
-            RESERVA REALIZA CON ÉXITO
+      {reservationOk && isReservationPage && activeReservation ? (
+        <div className="chargePointInformation__ok">
+          <div className="chargePointInformation__ok__info">
+            <p className="chargePointInformation__ok__info__text">
+              RESERVA REALIZA CON ÉXITO
+            </p>
+          </div>
+          <p className="chargePointInformation__ok__time">
+            *Dispones de {getMin()} min para llegar al punto de carga
           </p>
+          <hr />
+          <div className="chargePointInformation__ok__extend">
+            <p className="chargePointInformation__ok__extend__text">
+              Amplía el tiempo de reserva 10 minutos por 0.50€ más
+            </p>
+            <button
+              onClick={handleReservationPopup}
+              className="chargePointInformation__ok__extend__button"
+            >
+              Ampliar
+            </button>
+          </div>
+          <hr />
         </div>
-        <p className="chargePointInformation__ok__time">
-          *Dispones de {getMin()} min para llegar al punto de carga
-        </p>
-        <hr />
-        <div className="chargePointInformation__ok__extend">
-          <p className="chargePointInformation__ok__extend__text">
-            Amplía el tiempo de reserva 10 minutos por 0.50€ más
-          </p>
-          <button
-            onClick={handleReservationPopup}
-            className="chargePointInformation__ok__extend__button"
-          >
-            Ampliar
-          </button>
-        </div>
-        <hr />
-      </div>
+      ) : null}
       <div className="chargePointInformation__info">
         <p className="chargePointInformation__info__name">
           Punto de carga "{singleChargePoint.name}"
@@ -343,11 +348,17 @@ const ChargePointInformation = ({
             {connectionTypes &&
               connectionTypes.map((connectionType, i, array) =>
                 i !== array.length - 1 ? (
-                  <span className="chargePointInformation__info__grey">
+                  <span
+                    key={connectionType}
+                    className="chargePointInformation__info__grey"
+                  >
                     {connectionType},{" "}
                   </span>
                 ) : (
-                  <span className="chargePointInformation__info__grey">
+                  <span
+                    key={connectionType}
+                    className="chargePointInformation__info__grey"
+                  >
                     {connectionType}
                   </span>
                 )
