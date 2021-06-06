@@ -23,7 +23,7 @@ const AddCar = () => {
 
   return (
     <>
-      <BackArrow />
+      <BackArrow goProfile={true} />
       <AddUserCar message="Añadir" handleFormSubmit={handleFormSubmit} />
       <UserCars carToAdd={carToAdd} />
     </>

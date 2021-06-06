@@ -32,7 +32,7 @@ const FavoritesChargePoints = () => {
 
   return (
     <>
-      <BackArrow />
+      <BackArrow goProfile={true} />
       <p>Favorites</p>
       {userFavorites.length ? (
         userFavorites.map((favorite) => {
