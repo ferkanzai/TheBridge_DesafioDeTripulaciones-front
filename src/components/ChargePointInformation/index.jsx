@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import { useHistory } from "react-router";
 import Rating from "@material-ui/lab/Rating";
 
 import BackArrow from "../BackArrow";
@@ -89,6 +90,8 @@ const ChargePointInformation = ({
   const [openExtendReservation, setOpenExtendReservation] = useState(false);
   const [openCancelReservation, setOpenCancelReservation] = useState(false);
 
+  const history = useHistory();
+
   useEffect(() => {
     let id = setInterval(() => {
       setWatch(new Date());
@@ -98,6 +101,9 @@ const ChargePointInformation = ({
   }, []);
 
   const handleReservation = () => {
+    if (!user) {
+      history.push("/start");
+    }
     if (!isReservationPage) {
       setIsReservationPage(true);
     } else {
@@ -165,7 +171,7 @@ const ChargePointInformation = ({
       activeReservation?.expiration_date + 2 * 60 * 60 * 1000
     );
 
-    const min = (reservationTime - watch) / 1000 / 60;
+    const min = Number((reservationTime - watch) / 1000 / 60);
 
     if (min <= 0) setReservationOk(false);
 
