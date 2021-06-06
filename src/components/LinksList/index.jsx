@@ -5,7 +5,7 @@ import SingleLink from "../SingleLink";
 import { UserContext } from "../../store";
 
 import key from "../../svg/key.svg";
-import heart from "../../svg/heart.svg";
+import heart from "../../svg/grey-heart.svg";
 import friends from "../../svg/friends.svg";
 import gear from "../../svg/gear.svg";
 import paper from "../../svg/paper.svg";

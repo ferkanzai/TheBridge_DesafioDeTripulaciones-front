@@ -16,24 +16,13 @@ import ChargePointInformation from "../../components/ChargePointInformation";
 
 import { getChargePoints } from "../../services/charge-points";
 
+import { mappingColors } from "../../utils";
+
 import "./index.scss";
 
 mapboxgl.workerClass =
   // eslint-disable-next-line import/no-webpack-loader-syntax
   require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
-
-const mappingColors = (time) => {
-  const times = {
-    [time === 0]: "#1DAE69",
-    [time < 5]: "#89CC33",
-    [time > 5 && time < 15]: "#C5D22A",
-    [time > 15 && time < 30]: "#FAD966",
-    [time > 30 && time < 45]: "#B75454",
-    [time > 45]: "#C4C4C4",
-  };
-
-  return times[true];
-};
 
 const Map = ReactMapboxGl({
   accessToken:
