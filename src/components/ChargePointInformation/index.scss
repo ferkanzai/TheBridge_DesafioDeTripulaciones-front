@@ -143,7 +143,9 @@
   }
 
   &--full {
-    height: 100vh;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
   }
 
   &__pic {
@@ -222,6 +224,7 @@
 
     &__line {
       display: flex;
+      align-items: center;
 
       p {
         margin-left: 1rem;
@@ -233,10 +236,18 @@
       }
 
       &__container {
-        align-items: center;
         display: flex;
+        align-items: center;
         justify-content: center;
         width: 16px;
+        height: 16px;
+      }
+
+      &__circle {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 1px solid #020828;
       }
     }
 
