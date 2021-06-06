@@ -1,8 +1,14 @@
 import { useContext, useEffect, useState } from "react";
 import Rating from "@material-ui/lab/Rating";
 
+import BackArrow from "../BackArrow";
+
 import { getConenctionsByChargePoint } from "../../services/connections";
-import { postStartReservation } from "../../services/reservations";
+import {
+  postStartReservation,
+  putCancelReservation,
+  putExtendReservation,
+} from "../../services/reservations";
 import {
   deleteRemoveFavorite,
   getIsFavorite,
@@ -64,15 +70,35 @@ const ChargePointInformation = ({
   hideChargePointInformation,
   className,
 }) => {
-  const { user, userFavorites, setUserFavorites, token } =
-    useContext(UserContext);
+  const {
+    user,
+    userFavorites,
+    setUserFavorites,
+    token,
+    activeReservation,
+    setActiveReservation,
+  } = useContext(UserContext);
   const [isFavorite, setIsFavorite] = useState(false);
-
+  const [isReservationPage, setIsReservationPage] = useState(false);
   const [connectionTypes, setConnectionsTypes] = useState([]);
+  const [connectionId, setConnectionId] = useState(null);
+  const [error, setError] = useState(false);
+  const [reservationOk, setReservationOk] = useState(false);
 
-  const handleReservation = (connectionId) => {
-    const token = localStorage.getItem("access_token");
-    postStartReservation(token, connectionId);
+  const handleReservation = () => {
+    if (!isReservationPage) {
+      setIsReservationPage(true);
+    } else {
+      const token = localStorage.getItem("access_token");
+
+      postStartReservation(token, connectionId)
+        .then((res) => {
+          setActiveReservation(res[0]);
+          setError(false);
+          setReservationOk(true);
+        })
+        .catch(() => setError(true));
+    }
   };
 
   useEffect(() => {
@@ -86,16 +112,22 @@ const ChargePointInformation = ({
         );
 
         setConnectionsTypes(nonRepeatedConnectionsTypes);
+        setConnectionId(res[0].id);
       })
       .finally(() => {
         if (userFavorites.map((fav) => fav.id).includes(singleChargePoint.id))
           setIsFavorite(true);
       });
-  }, [singleChargePoint, userFavorites]);
+
+    activeReservation?.connection_id === connectionId && setReservationOk(true);
+  }, [
+    singleChargePoint,
+    userFavorites,
+    activeReservation?.connection_id,
+    connectionId,
+  ]);
 
   const handleFavorite = () => {
-    console.log(userFavorites);
-
     getIsFavorite(token, singleChargePoint.id).then((res) => {
       if (res.length === 0) {
         postAddFavorite(token, singleChargePoint.id).then(() => {
@@ -115,8 +147,57 @@ const ChargePointInformation = ({
     });
   };
 
+  const getMin = () => {
+    const reservationTime = new Date(
+      activeReservation?.expiration_date + 2 * 60 * 60 * 1000
+    );
+    const now = new Date(Date.now());
+
+    const min = (reservationTime - now) / 1000 / 60;
+
+    if (min < 0) setReservationOk(false);
+
+    return min.toFixed(0);
+  };
+
+  const extendReservation = () => {
+    putExtendReservation(token, activeReservation?.id).then((res) => {
+      setActiveReservation(res[0]);
+      setError(false);
+      setReservationOk(true);
+    });
+  };
+
+  const cancelReservation = () => {
+    if (isReservationPage && activeReservation.length) {
+      putCancelReservation(token, activeReservation.id).then((res) => {
+        setActiveReservation([]);
+        setError(false);
+        setReservationOk(false);
+      });
+    } else {
+      hideChargePointInformation();
+    }
+  };
+
   return (
-    <div className={className}>
+    <div
+      className={
+        isReservationPage
+          ? `${className} chargePointInformation--full`
+          : className
+      }
+    >
+      {isReservationPage && (
+        <>
+          <BackArrow
+            goProfile={false}
+            setIsReservationPage={setIsReservationPage}
+            setError={setError}
+          />
+          <p>Detalles de la Reserva</p>
+        </>
+      )}
       <div className="chargePointInformation__pic">
         <img
           src={chargePoint}
@@ -135,6 +216,27 @@ const ChargePointInformation = ({
       <div className="chargePointInformation__operator">
         <span>{singleChargePoint.operator}</span>
         <img src={chooseSrc[singleChargePoint.operator]} alt="" />
+      </div>
+      <div
+        className="chargePointInformation__error"
+        style={error ? null : { display: "none" }}
+      >
+        <p>FALLO AL REALIZAR RESERVA. NO HAY USUARIO</p>
+      </div>
+      <div
+        className="chargePointInformation__ok"
+        style={reservationOk && isReservationPage ? null : { display: "none" }}
+      >
+        <div className="chargePointInformation__ok__info">
+          <p>RESERVA REALIZA CON ÉXITO</p>
+        </div>
+        <p>*Dispones de {getMin()} min para llegar al punto de carga</p>
+        <hr />
+        <div>
+          <p>Amplía el tiempo de reserva por 0.50€ más</p>
+          <button onClick={extendReservation}>Ampliar</button>
+        </div>
+        <hr />
       </div>
       <div className="chargePointInformation__info">
         <p className="chargePointInformation__info__name">
@@ -195,7 +297,7 @@ const ChargePointInformation = ({
       </div>
       <div className="chargePointInformation__buttons">
         <button
-          onClick={hideChargePointInformation}
+          onClick={cancelReservation}
           className="chargePointInformation__buttons__cancel"
         >
           Cancelar

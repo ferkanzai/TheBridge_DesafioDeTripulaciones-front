@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { getProfile, postLogin, postSignUp } from "../services/auth";
 import { getFavoritesChargePoints } from "../services/favorites";
+import { getActiveReservation } from "../services/reservations";
 
 export function useUser() {
   const [user, setUser] = useState(null);
   const [userFavorites, setUserFavorites] = useState([]);
+  const [activeReservation, setActiveReservation] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
   const history = useHistory();
 
@@ -18,6 +20,7 @@ export function useUser() {
       .finally(() => setLoadingUser(false));
 
     getFavoritesChargePoints(token).then(setUserFavorites);
+    getActiveReservation(token).then((res) => setActiveReservation(res[0]));
   }, [history, token]);
 
   const login = async (email, password) => {
@@ -48,5 +51,7 @@ export function useUser() {
     token,
     userFavorites,
     setUserFavorites,
+    activeReservation,
+    setActiveReservation,
   };
 }

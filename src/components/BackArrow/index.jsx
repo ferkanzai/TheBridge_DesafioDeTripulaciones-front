@@ -2,10 +2,15 @@ import { useHistory } from "react-router";
 
 import backArrow from "../../svg/back-arrow.svg";
 
-const BackArrow = () => {
+const BackArrow = ({ goProfile, setIsReservationPage, setError }) => {
   const history = useHistory();
 
-  const handleBack = () => history.push("/profile");
+  const handleBack = () => {
+    if (goProfile) history.push("/profile");
+
+    setIsReservationPage(false);
+    setError(false);
+  };
 
   return <img src={backArrow} alt="bacl arrow" onClick={handleBack} />;
 };
