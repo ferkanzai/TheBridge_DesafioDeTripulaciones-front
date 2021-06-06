@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { getProfile, postLogin, postSignUp } from "../services/auth";
+import { getFavoritesChargePoints } from "../services/favorites";
 
 export function useUser() {
   const [user, setUser] = useState(null);
+  const [userFavorites, setUserFavorites] = useState([]);
   const [loadingUser, setLoadingUser] = useState(true);
   const history = useHistory();
 
@@ -14,6 +16,8 @@ export function useUser() {
       .then((user) => setUser(user))
       .catch((err) => err.code === 401 && history.push("/"))
       .finally(() => setLoadingUser(false));
+
+    getFavoritesChargePoints(token).then(setUserFavorites);
   }, [history, token]);
 
   const login = async (email, password) => {
@@ -35,5 +39,14 @@ export function useUser() {
     localStorage.removeItem("access_token");
   };
 
-  return { user, loadingUser, login, signUp, logout, token };
+  return {
+    user,
+    loadingUser,
+    login,
+    signUp,
+    logout,
+    token,
+    userFavorites,
+    setUserFavorites,
+  };
 }

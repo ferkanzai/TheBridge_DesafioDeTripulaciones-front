@@ -1,16 +1,25 @@
+import { useContext, useEffect, useState } from "react";
 import Rating from "@material-ui/lab/Rating";
 
+import { getConenctionsByChargePoint } from "../../services/connections";
 import { postStartReservation } from "../../services/reservations";
+import {
+  deleteRemoveFavorite,
+  getIsFavorite,
+  postAddFavorite,
+} from "../../services/favorites";
+
+import { UserContext } from "../../store";
 
 import chargePoint from "../../svg/charge-point.svg";
 import location from "../../svg/location.svg";
 import clock from "../../svg/clock.svg";
 import dollar from "../../svg/dollar.svg";
 import charge from "../../svg/charge.svg";
+import heart from "../../svg/heart.svg";
+import redHeart from "../../svg/red-heart.svg";
 
 import "./index.scss";
-import { useEffect, useState } from "react";
-import { getConenctionsByChargePoint } from "../../services/connections";
 
 const path = "/operators";
 
@@ -55,6 +64,10 @@ const ChargePointInformation = ({
   hideChargePointInformation,
   className,
 }) => {
+  const { user, userFavorites, setUserFavorites, token } =
+    useContext(UserContext);
+  const [isFavorite, setIsFavorite] = useState(false);
+
   const [connectionTypes, setConnectionsTypes] = useState([]);
 
   const handleReservation = (connectionId) => {
@@ -63,15 +76,44 @@ const ChargePointInformation = ({
   };
 
   useEffect(() => {
-    getConenctionsByChargePoint(singleChargePoint.id).then((res) => {
-      const connectionsTypes = res.map(
-        (connection) => connection.connection_type
-      );
-      const nonRepeatedConnectionsTypes = Array.from(new Set(connectionsTypes));
+    getConenctionsByChargePoint(singleChargePoint.id)
+      .then((res) => {
+        const connectionsTypes = res.map(
+          (connection) => connection.connection_type
+        );
+        const nonRepeatedConnectionsTypes = Array.from(
+          new Set(connectionsTypes)
+        );
 
-      setConnectionsTypes(nonRepeatedConnectionsTypes);
+        setConnectionsTypes(nonRepeatedConnectionsTypes);
+      })
+      .finally(() => {
+        if (userFavorites.map((fav) => fav.id).includes(singleChargePoint.id))
+          setIsFavorite(true);
+      });
+  }, [singleChargePoint, userFavorites]);
+
+  const handleFavorite = () => {
+    console.log(userFavorites);
+
+    getIsFavorite(token, singleChargePoint.id).then((res) => {
+      if (res.length === 0) {
+        postAddFavorite(token, singleChargePoint.id).then(() => {
+          setUserFavorites((prevFavs) => [...prevFavs, singleChargePoint]);
+          setIsFavorite(true);
+        });
+      } else {
+        const favoriteId = res[0].fav_id;
+
+        deleteRemoveFavorite(token, favoriteId).then(() => {
+          setUserFavorites(
+            userFavorites.filter((fav) => fav.id !== singleChargePoint.id)
+          );
+          setIsFavorite(false);
+        });
+      }
     });
-  }, [singleChargePoint]);
+  };
 
   return (
     <div className={className}>
@@ -81,6 +123,14 @@ const ChargePointInformation = ({
           className="chargePointInformation__pic__svg"
           alt=""
         />
+        {user && (
+          <img
+            src={isFavorite ? redHeart : heart}
+            alt="handle favorite"
+            className="chargePointInformation__pic__heart"
+            onClick={handleFavorite}
+          />
+        )}
       </div>
       <div className="chargePointInformation__operator">
         <span>{singleChargePoint.operator}</span>
