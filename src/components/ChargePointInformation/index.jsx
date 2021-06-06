@@ -84,6 +84,18 @@ const ChargePointInformation = ({
   const [connectionId, setConnectionId] = useState(null);
   const [error, setError] = useState(false);
   const [reservationOk, setReservationOk] = useState(false);
+  const [watch, setWatch] = useState(new Date());
+  const [openDelete, setOpenDelete] = useState(false);
+  const [openExtendReservation, setOpenExtendReservation] = useState(false);
+  const [openCancelReservation, setOpenCancelReservation] = useState(false);
+
+  useEffect(() => {
+    let id = setInterval(() => {
+      setWatch(new Date());
+    }, 6000);
+
+    return () => clearInterval(id);
+  }, []);
 
   const handleReservation = () => {
     if (!isReservationPage) {
@@ -91,13 +103,19 @@ const ChargePointInformation = ({
     } else {
       const token = localStorage.getItem("access_token");
 
-      postStartReservation(token, connectionId)
-        .then((res) => {
-          setActiveReservation(res[0]);
-          setError(false);
-          setReservationOk(true);
-        })
-        .catch(() => setError(true));
+      if (activeReservation?.connection_id !== connectionId) {
+        postStartReservation(token, connectionId)
+          .then((res) => {
+            setActiveReservation(res[0]);
+            setError(false);
+            setReservationOk(true);
+          })
+          .catch(() => {
+            setError(true);
+          });
+      } else {
+        setOpenDelete(!openDelete);
+      }
     }
   };
 
@@ -120,12 +138,7 @@ const ChargePointInformation = ({
       });
 
     activeReservation?.connection_id === connectionId && setReservationOk(true);
-  }, [
-    singleChargePoint,
-    userFavorites,
-    activeReservation?.connection_id,
-    connectionId,
-  ]);
+  }, [singleChargePoint, userFavorites, activeReservation, connectionId]);
 
   const handleFavorite = () => {
     getIsFavorite(token, singleChargePoint.id).then((res) => {
@@ -151,11 +164,10 @@ const ChargePointInformation = ({
     const reservationTime = new Date(
       activeReservation?.expiration_date + 2 * 60 * 60 * 1000
     );
-    const now = new Date(Date.now());
 
-    const min = (reservationTime - now) / 1000 / 60;
+    const min = (reservationTime - watch) / 1000 / 60;
 
-    if (min < 0) setReservationOk(false);
+    if (min <= 0) setReservationOk(false);
 
     return min.toFixed(0);
   };
@@ -165,16 +177,41 @@ const ChargePointInformation = ({
       setActiveReservation(res[0]);
       setError(false);
       setReservationOk(true);
+      setOpenExtendReservation(!openExtendReservation);
     });
   };
 
+  const handleReservationPopup = () => {
+    setOpenExtendReservation(!openExtendReservation);
+  };
+
+  const handleCancelReservationPopup = () => {
+    setOpenCancelReservation(!openCancelReservation);
+  };
+
   const cancelReservation = () => {
-    if (isReservationPage && activeReservation.length) {
-      putCancelReservation(token, activeReservation.id).then((res) => {
-        setActiveReservation([]);
-        setError(false);
-        setReservationOk(false);
-      });
+    putCancelReservation(token, activeReservation.id).then((res) => {
+      setActiveReservation(null);
+      setError(false);
+      setReservationOk(false);
+      setOpenCancelReservation(!openCancelReservation);
+    });
+  };
+
+  const handleClickPopup = () => {
+    setOpenDelete(!openDelete);
+  };
+
+  const handleCancelButton = () => {
+    if (
+      isReservationPage &&
+      activeReservation &&
+      activeReservation.connection_id === connectionId
+    ) {
+      handleCancelReservationPopup();
+    } else if (isReservationPage) {
+      setIsReservationPage(false);
+      setError(false);
     } else {
       hideChargePointInformation();
     }
@@ -189,14 +226,39 @@ const ChargePointInformation = ({
       }
     >
       {isReservationPage && (
-        <>
-          <BackArrow
-            goProfile={false}
-            setIsReservationPage={setIsReservationPage}
-            setError={setError}
-          />
-          <p>Detalles de la Reserva</p>
-        </>
+        <div className="chargePointInformation__header">
+          <div className="chargePointInformation__header__left">
+            <p className="chargePointInformation__header__left__text">
+              Detalles de la Reserva
+            </p>
+            <div className="chargePointInformation__header__left__operator">
+              <span>{singleChargePoint.operator}</span>
+              <img src={chooseSrc[singleChargePoint.operator]} alt="" />
+            </div>
+          </div>
+          <div className="chargePointInformation__header__right">
+            <BackArrow
+              goProfile={false}
+              setIsReservationPage={setIsReservationPage}
+              setError={setError}
+            />
+            <div className="chargePointInformation__header__right__pic">
+              <img
+                src={chargePoint}
+                className="chargePointInformation__header__right__pic__svg"
+                alt=""
+              />
+              {user && (
+                <img
+                  src={isFavorite ? redHeart : heart}
+                  alt="handle favorite"
+                  className="chargePointInformation__header__right__pic__heart"
+                  onClick={handleFavorite}
+                />
+              )}
+            </div>
+          </div>
+        </div>
       )}
       <div className="chargePointInformation__pic">
         <img
@@ -213,28 +275,44 @@ const ChargePointInformation = ({
           />
         )}
       </div>
-      <div className="chargePointInformation__operator">
-        <span>{singleChargePoint.operator}</span>
-        <img src={chooseSrc[singleChargePoint.operator]} alt="" />
-      </div>
+      {!isReservationPage && (
+        <div className="chargePointInformation__operator">
+          <span>{singleChargePoint.operator}</span>
+          <img src={chooseSrc[singleChargePoint.operator]} alt="" />
+        </div>
+      )}
       <div
         className="chargePointInformation__error"
         style={error ? null : { display: "none" }}
       >
-        <p>FALLO AL REALIZAR RESERVA. NO HAY USUARIO</p>
+        <p className="chargePointInformation__error__text">
+          FALLO AL REALIZAR RESERVA. COMPRUEBE SI TIENE LA SESIÓN INICIADA O SI
+          TIENE RESERVAS ACTIVAS
+        </p>
       </div>
       <div
         className="chargePointInformation__ok"
         style={reservationOk && isReservationPage ? null : { display: "none" }}
       >
         <div className="chargePointInformation__ok__info">
-          <p>RESERVA REALIZA CON ÉXITO</p>
+          <p className="chargePointInformation__ok__info__text">
+            RESERVA REALIZA CON ÉXITO
+          </p>
         </div>
-        <p>*Dispones de {getMin()} min para llegar al punto de carga</p>
+        <p className="chargePointInformation__ok__time">
+          *Dispones de {getMin()} min para llegar al punto de carga
+        </p>
         <hr />
-        <div>
-          <p>Amplía el tiempo de reserva por 0.50€ más</p>
-          <button onClick={extendReservation}>Ampliar</button>
+        <div className="chargePointInformation__ok__extend">
+          <p className="chargePointInformation__ok__extend__text">
+            Amplía el tiempo de reserva 10 minutos por 0.50€ más
+          </p>
+          <button
+            onClick={handleReservationPopup}
+            className="chargePointInformation__ok__extend__button"
+          >
+            Ampliar
+          </button>
         </div>
         <hr />
       </div>
@@ -297,7 +375,7 @@ const ChargePointInformation = ({
       </div>
       <div className="chargePointInformation__buttons">
         <button
-          onClick={cancelReservation}
+          onClick={handleCancelButton}
           className="chargePointInformation__buttons__cancel"
         >
           Cancelar
@@ -309,6 +387,75 @@ const ChargePointInformation = ({
           Reservar
         </button>
       </div>
+      {openDelete && (
+        <div className="popupActiveReservation">
+          <div className="popupActiveReservation__text">
+            <span>Reserva activa, no se puede volver a reservar</span>
+            <div className="popupActiveReservation__buttons">
+              <button onClick={handleClickPopup}>Volver</button>
+            </div>
+          </div>
+        </div>
+      )}
+      {openExtendReservation && (
+        <div className="popupExtendReservation">
+          <div className="popupExtendReservation__title">
+            <span className="popupExtendReservation__title__text">
+              Finalización del tiempo de Reserva
+            </span>
+          </div>
+          <div className="popupExtendReservation__text">
+            <span className="popupExtendReservation__text__bold">
+              ¿Quieres reservar este punto más tiempo?
+            </span>
+            <span className="popupExtendReservation__text__normal">
+              precio por ampliar: 0.50€
+            </span>
+            <div className="popupExtendReservation__buttons">
+              <button
+                onClick={extendReservation}
+                className="popupExtendReservation__buttons__extend"
+              >
+                Ampliar
+              </button>
+              <button
+                onClick={handleReservationPopup}
+                className="popupExtendReservation__buttons__no"
+              >
+                Ahora No
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {openCancelReservation && (
+        <div className="popupExtendReservation">
+          <div className="popupExtendReservation__title">
+            <span className="popupExtendReservation__title__text">
+              Cancelar Reserva
+            </span>
+          </div>
+          <div className="popupExtendReservation__text">
+            <span className="popupExtendReservation__text__bold">
+              ¿Seguro que quieres cancelar esta reserva?
+            </span>
+            <div className="popupExtendReservation__buttons">
+              <button
+                onClick={cancelReservation}
+                className="popupExtendReservation__buttons__extend"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleCancelReservationPopup}
+                className="popupExtendReservation__buttons__no"
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -12,7 +12,15 @@ const BackArrow = ({ goProfile, setIsReservationPage, setError }) => {
     setError(false);
   };
 
-  return <img src={backArrow} alt="bacl arrow" onClick={handleBack} />;
+  return (
+    <img
+      src={backArrow}
+      width={24}
+      height={24}
+      alt="bacl arrow"
+      onClick={handleBack}
+    />
+  );
 };
 
 export default BackArrow;
