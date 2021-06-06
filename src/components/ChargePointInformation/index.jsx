@@ -3,18 +3,75 @@ import Rating from "@material-ui/lab/Rating";
 import { postStartReservation } from "../../services/reservations";
 
 import chargePoint from "../../svg/charge-point.svg";
+import location from "../../svg/location.svg";
+import clock from "../../svg/clock.svg";
+import dollar from "../../svg/dollar.svg";
+import charge from "../../svg/charge.svg";
 
 import "./index.scss";
+import { useEffect, useState } from "react";
+import { getConenctionsByChargePoint } from "../../services/connections";
+
+const path = "/operators";
+
+const chooseSrc = {
+  Iberdrola: `${path}/iberdrola.jpg`,
+  "Unknown Operator": `${path}/interrogation.png`,
+  Wenea: `${path}/wenea.png`,
+  Etecnic: `${path}/etecnic.jpg`,
+  Ionity: `${path}/ionity.png`,
+  EasyCharger: `${path}/easycharger.png`,
+  "Fenie Energía (Spain)": `${path}/fenie.png`,
+  Endesa: `${path}/endesa.png`,
+  "Tesla Motors (Worldwide)": `${path}/tesla.png`,
+  "LIVE Barcelona": `${path}/live.png`,
+  EDP: `${path}/edp.png`,
+  "IBIL (Es)": `${path}/ibil.png`,
+  Electromaps: `${path}/electromaps.png`,
+  "Estabanell Energia": `${path}/estabanell.png`,
+  "AMB (Àrea metropolitana de Barcelona)": `${path}/amb.png`,
+  "evcharge.online": `${path}/evcharge.png`,
+  "(Business Owner at Location)": `${path}/interrogation.png`,
+  "BP Pulse": `${path}/bp.jpg`,
+  Amersam: `${path}/amersam.png`,
+  "GE WattStation (No longer active)": `${path}/ge.png`,
+  "MELIB (ES)": `${path}/melib.png`,
+  "Be Energised (has-to-be)": `${path}/beenergised.png`,
+  "Urbener Energía": `${path}/urbener.png`,
+  "POD Point (UK)": `${path}/podpoint.png`,
+  Renault: `${path}/renault.png`,
+  "Viesgo (Spain)": `${path}/viesgo.jpg`,
+  GIC: `${path}/gic.png`,
+  "Enel X": `${path}/enel.png`,
+  Nomadpower: `${path}/nomadpower.png`,
+  sofos: `${path}/sofos.jpeg`,
+  "MobecPoint (Es)": `${path}/mobecpoint.png`,
+  "The New Motion (BE)": `${path}/newmotion.png`,
+  "EV-Box": `${path}/evbox.png`,
+};
 
 const ChargePointInformation = ({
   singleChargePoint,
   hideChargePointInformation,
   className,
 }) => {
+  const [connectionTypes, setConnectionsTypes] = useState([]);
+
   const handleReservation = (connectionId) => {
     const token = localStorage.getItem("access_token");
     postStartReservation(token, connectionId);
   };
+
+  useEffect(() => {
+    getConenctionsByChargePoint(singleChargePoint.id).then((res) => {
+      const connectionsTypes = res.map(
+        (connection) => connection.connection_type
+      );
+      const nonRepeatedConnectionsTypes = Array.from(new Set(connectionsTypes));
+
+      setConnectionsTypes(nonRepeatedConnectionsTypes);
+    });
+  }, [singleChargePoint]);
 
   return (
     <div className={className}>
@@ -25,22 +82,81 @@ const ChargePointInformation = ({
           alt=""
         />
       </div>
-      <p>{singleChargePoint.name}</p>
-      <p>tiempo de espera: {singleChargePoint.waiting_time} minutos</p>
-      <p>Operador: {singleChargePoint.operator}</p>
-      <p>Distancia: {singleChargePoint.distance.toFixed(2)} km</p>
-      <p>Precio de carga ({singleChargePoint.price.toFixed(2)}€/min)</p>
-      <p>Valoraciones de los usuarios:</p>
-      <Rating defaultValue={singleChargePoint.rating || 0} readOnly={true} />
-      <p>({singleChargePoint.votes})</p>
-      <p>
-        Última revisión técnica del cargador:{" "}
-        {singleChargePoint.last_verified
-          ? new Date(singleChargePoint.last_verified).toLocaleString()
-          : "No disponible"}
-      </p>
-      <button onClick={hideChargePointInformation}>Cancelar</button>
-      <button onClick={handleReservation}>Reservar</button>
+      <div className="chargePointInformation__operator">
+        <span>{singleChargePoint.operator}</span>
+        <img src={chooseSrc[singleChargePoint.operator]} alt="" />
+      </div>
+      <div className="chargePointInformation__info">
+        <p className="chargePointInformation__info__name">
+          Punto de carga "{singleChargePoint.name}"
+        </p>
+        <div className="chargePointInformation__info__line">
+          <img src={location} alt="" />
+          <p>a {singleChargePoint.distance.toFixed(2)} km</p>
+        </div>
+        <div className="chargePointInformation__info__line">
+          <img src={clock} alt="" />
+          <p>Disponible en {singleChargePoint.waiting_time} minutos</p>
+        </div>
+        <div className="chargePointInformation__info__line">
+          <div className="chargePointInformation__info__line__container">
+            <img src={charge} alt="" />
+          </div>
+          <p>
+            Conectores{" "}
+            {connectionTypes &&
+              connectionTypes.map((connectionType, i, array) =>
+                i !== array.length - 1 ? (
+                  <span className="chargePointInformation__info__grey">
+                    {connectionType},{" "}
+                  </span>
+                ) : (
+                  <span className="chargePointInformation__info__grey">
+                    {connectionType}
+                  </span>
+                )
+              )}
+          </p>
+        </div>
+        <div className="chargePointInformation__info__line">
+          <img src={dollar} alt="" />
+          <p>Precio de carga ({singleChargePoint.price.toFixed(2)}€/min)</p>
+        </div>
+        <hr />
+        <div className="chargePointInformation__info__rates">
+          <p>Valoraciones de los usuarios</p>
+          <Rating
+            defaultValue={singleChargePoint.rating || 0}
+            readOnly={true}
+            size="small"
+          />
+          <p className="chargePointInformation__info__grey">
+            ({singleChargePoint.votes})
+          </p>
+        </div>
+        <p>
+          Última revisión técnica{" "}
+          <span className="chargePointInformation__info__grey">
+            {singleChargePoint.last_verified
+              ? new Date(singleChargePoint.last_verified).toLocaleString()
+              : "no disponible"}
+          </span>
+        </p>
+      </div>
+      <div className="chargePointInformation__buttons">
+        <button
+          onClick={hideChargePointInformation}
+          className="chargePointInformation__buttons__cancel"
+        >
+          Cancelar
+        </button>
+        <button
+          onClick={handleReservation}
+          className="chargePointInformation__buttons__reservation"
+        >
+          Reservar
+        </button>
+      </div>
     </div>
   );
 };
