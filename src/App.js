@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Map from "./pages/Map";
 import Profile from "./pages/Profile";
+import Reservations from "./pages/Reservations";
 import SignUp from "./pages/SignUp";
 import SingleUserCar from "./pages/SingleUserCar";
 import Start from "./pages/Start";
@@ -75,10 +76,18 @@ function App() {
             </WithAuthentication>
           </Route>
 
-          <Route path="/charge-points/favorites">
+          <Route path="/charge-points/favorites" exact>
             <WithAuthentication>
               <WithNavBar>
                 <FavoritesChargePoints />
+              </WithNavBar>
+            </WithAuthentication>
+          </Route>
+
+          <Route path="/reservations" exact>
+            <WithAuthentication>
+              <WithNavBar>
+                <Reservations />
               </WithNavBar>
             </WithAuthentication>
           </Route>

@@ -19,10 +19,12 @@ const NavBar = () => {
       <Link to="/map">
         <img src={pathname === "/map" ? atRoutes : routes} alt="" />
       </Link>
-      <img
-        src={pathname === "/reservations" ? atReservations : reservations}
-        alt=""
-      />
+      <Link to="/reservations">
+        <img
+          src={pathname === "/reservations" ? atReservations : reservations}
+          alt=""
+        />
+      </Link>
       <Link to="/profile">
         <img
           src={
