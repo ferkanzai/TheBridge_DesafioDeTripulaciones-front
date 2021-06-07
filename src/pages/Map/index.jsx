@@ -1,3 +1,9 @@
+import "mapbox-gl/dist/mapbox-gl.css";
+import "mapbox-gl/dist/svg/mapboxgl-ctrl-compass.svg";
+import "mapbox-gl/dist/svg/mapboxgl-ctrl-geolocate.svg";
+import "mapbox-gl/dist/svg/mapboxgl-ctrl-zoom-in.svg";
+import "mapbox-gl/dist/svg/mapboxgl-ctrl-zoom-out.svg";
+
 import { useEffect, useRef, useState } from "react";
 import ReactMapGL, {
   Source,
@@ -21,7 +27,6 @@ import {
 import search from "../../svg/search.svg";
 import filterOptions from "../../svg/filter-options.svg";
 
-import "mapbox-gl/dist/mapbox-gl.css";
 import "./index.scss";
 
 const { REACT_APP_MAPBOX_ACCESS_TOKEN } = process.env;
@@ -79,27 +84,32 @@ const Map = () => {
   const onClick = (event) => {
     console.log(event);
     const feature = event.features[0];
-    if (feature.layer.id === "clusters") {
-      const clusterId = feature.properties.cluster_id;
 
-      const mapboxSource = mapRef.current.getMap().getSource("charge-points");
+    if (feature) {
+      if (feature.layer.id === "clusters") {
+        const clusterId = feature.properties.cluster_id;
 
-      mapboxSource.getClusterExpansionZoom(clusterId, (err, zoom) => {
-        if (err) {
-          return;
-        }
+        const mapboxSource = mapRef.current.getMap().getSource("charge-points");
 
-        setViewport({
-          ...viewport,
-          longitude: feature.geometry.coordinates[0],
-          latitude: feature.geometry.coordinates[1],
-          zoom,
-          transitionDuration: 200,
+        mapboxSource.getClusterExpansionZoom(clusterId, (err, zoom) => {
+          if (err) {
+            return;
+          }
+
+          setViewport({
+            ...viewport,
+            longitude: feature.geometry.coordinates[0],
+            latitude: feature.geometry.coordinates[1],
+            zoom,
+            transitionDuration: 200,
+          });
         });
-      });
-    }
-    if (feature.layer.id === "unclustered-point") {
-      showChargePointInformation(feature.properties);
+      }
+      if (feature.layer.id === "unclustered-point") {
+        showChargePointInformation(feature.properties);
+      }
+    } else {
+      console.log("click");
     }
   };
 
