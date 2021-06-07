@@ -11,7 +11,7 @@ const Reservations = () => {
       activeReservation?.reservation_date + 2 * 60 * 60 * 1000
     );
 
-    const min = differenceInMinutes(Date.now() - reservationTime);
+    const min = differenceInMinutes(Date.now(), reservationTime);
 
     return min;
   };
