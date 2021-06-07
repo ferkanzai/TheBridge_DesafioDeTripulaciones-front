@@ -1,13 +1,21 @@
-import { useEffect, useState } from "react";
-import MapGL, { GeolocateControl, Marker } from "@urbica/react-map-gl";
-import Cluster from "@urbica/react-map-gl-cluster";
+import { useEffect, useRef, useState } from "react";
+import ReactMapGL, {
+  Source,
+  Layer,
+  GeolocateControl,
+  NavigationControl,
+} from "react-map-gl";
 
 import "mapbox-gl/dist/mapbox-gl.css";
 import "./index.scss";
 
 import { getChargePoints } from "../../services/charge-points";
 
-import { mappingColors } from "../../utils";
+import {
+  clusterLayer,
+  clusterCountLayer,
+  unclusteredPointLayer,
+} from "./layers";
 
 const { REACT_APP_MAPBOX_ACCESS_TOKEN } = process.env;
 
@@ -21,11 +29,6 @@ const Map = () => {
     longitude: userLng || -3,
     zoom: 8,
   });
-
-  const geolocateControlStyle = {
-    right: 10,
-    top: 10,
-  };
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -54,74 +57,89 @@ const Map = () => {
     getChargePoints(userLat, userLng).then((res) => setChargePoints(res));
   }, [userLat, userLng]);
 
-  const style = {
-    width: "35px",
-    height: "35px",
-    color: "#fff",
-    background: "#1978c8",
-    borderRadius: "50%",
-    // textAlign: "center",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+  const mapRef = useRef(null);
+
+  const onClick = (event) => {
+    console.log(event);
+    const feature = event.features[0];
+    if (feature.layer.id === "clusters") {
+      const clusterId = feature.properties.cluster_id;
+
+      const mapboxSource = mapRef.current.getMap().getSource("charge-points");
+
+      mapboxSource.getClusterExpansionZoom(clusterId, (err, zoom) => {
+        if (err) {
+          return;
+        }
+
+        setViewport({
+          ...viewport,
+          longitude: feature.geometry.coordinates[0],
+          latitude: feature.geometry.coordinates[1],
+          zoom,
+          transitionDuration: 200,
+        });
+      });
+    }
+    if (feature.layer.id === "unclustered-point") {
+      console.log(feature.properties);
+    }
   };
 
-  const ClusterMarker = ({ longitude, latitude, pointCount }) => (
-    <Marker longitude={longitude} latitude={latitude}>
-      <div style={{ ...style, background: mappingColors(pointCount) }}>
-        {pointCount}
-      </div>
-    </Marker>
-  );
-
-  const onMarkerClick = (id) => {
-    console.log(id);
-    alert(`You clicked on marker ${id}`);
+  const data = {
+    type: "FeatureCollection",
+    features: chargePoints.map((chargePoint) => ({
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [chargePoint.longitude, chargePoint.latitude],
+      },
+      properties: { ...chargePoint },
+    })),
   };
 
   return (
-    <MapGL
-      style={{ width: "100vw", height: "100vh" }}
+    <ReactMapGL
+      width="100vw"
+      height="calc(100vh - 56px)"
       className="map"
       {...viewport}
       onViewportChange={(nextViewport) => setViewport(nextViewport)}
       mapStyle="mapbox://styles/mapbox/streets-v11"
       accessToken={REACT_APP_MAPBOX_ACCESS_TOKEN}
+      interactiveLayerIds={[clusterLayer.id, unclusteredPointLayer.id]}
+      onClick={onClick}
+      ref={mapRef}
+      attributionControl={false}
     >
+      <NavigationControl
+        style={{
+          left: 10,
+          bottom: 10,
+        }}
+      />
       <GeolocateControl
-        style={geolocateControlStyle}
+        style={{
+          right: 10,
+          bottom: 10,
+        }}
         positionOptions={{ enableHighAccuracy: true }}
         trackUserLocation={true}
         auto
       />
-      <Cluster
-        radius={40}
-        extent={512}
-        nodeSize={64}
-        maxZoom={14}
-        component={ClusterMarker}
+      <Source
+        id="charge-points"
+        type="geojson"
+        data={data}
+        cluster={true}
+        clusterMaxZoom={14}
+        clusterRadius={50}
       >
-        {chargePoints.map((chargePoint) => (
-          <Marker
-            key={chargePoint.id}
-            longitude={chargePoint.longitude}
-            latitude={chargePoint.latitude}
-            onClick={() => onMarkerClick(chargePoint.id)}
-          >
-            <div
-              className="marker"
-              style={{
-                ...style,
-                backgroundColor: mappingColors(chargePoint.waiting_time),
-                width: "15px",
-                height: "15px",
-                border: "1px solid black",
-              }}
-            />
-          </Marker>
-        ))}
-      </Cluster>
-    </MapGL>
+        <Layer {...clusterLayer} />
+        <Layer {...clusterCountLayer} />
+        <Layer {...unclusteredPointLayer} />
+      </Source>
+    </ReactMapGL>
   );
 };
 
