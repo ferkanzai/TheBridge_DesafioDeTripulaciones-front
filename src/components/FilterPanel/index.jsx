@@ -10,7 +10,13 @@ import {
 import { UserContext } from "../../store";
 import { getUserCars } from "../../services/users";
 
-const FilterPanel = ({ setFilterPanel, lat, lng, setChargePoints }) => {
+const FilterPanel = ({
+  setFilterPanel,
+  lat,
+  lng,
+  setChargePoints,
+  className,
+}) => {
   let { token } = useContext(UserContext);
   const methods = useForm();
   const [message, setMessage] = useState(false);
@@ -78,18 +84,18 @@ const FilterPanel = ({ setFilterPanel, lat, lng, setChargePoints }) => {
   };
 
   return (
-    <div className="filter-panel">
+    <div className={`${className}filter-panel`}>
       <h2>Filtrado</h2>
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(handleFormSubmit)}
-          className="filter-panel__options"
+          className={`${className}filter-panel__options`}
         >
-          <div className="filter-panel__options__selectors">
+          <div className={`${className}filter-panel__options__selectors`}>
             <p>Autonomía restante</p>
             <span>0 km</span>
             <input
-              className="filter-panel__options__selectors__distance"
+              className={`${className}filter-panel__options__selectors__distance`}
               type="range"
               min="0"
               max="100"
@@ -156,7 +162,7 @@ const FilterPanel = ({ setFilterPanel, lat, lng, setChargePoints }) => {
               </>
             )}
           </div>
-          <div className="filter-panel__options__buttons">
+          <div className={`${className}filter-panel__options__buttons`}>
             <button type="submit">Filtrar</button>
             <button type="reset" onClick={handleReset}>
               Resetear
@@ -165,7 +171,7 @@ const FilterPanel = ({ setFilterPanel, lat, lng, setChargePoints }) => {
         </form>
       </FormProvider>
       <button
-        className="filter-panel__close"
+        className={`${className}filter-panel__close`}
         onClick={() => setFilterPanel(false)}
       >
         x
