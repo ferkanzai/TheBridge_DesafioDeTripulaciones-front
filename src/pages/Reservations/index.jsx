@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { differenceInMinutes } from "date-fns";
 
 import { UserContext } from "../../store";
 
@@ -10,9 +11,9 @@ const Reservations = () => {
       activeReservation?.reservation_date + 2 * 60 * 60 * 1000
     );
 
-    const min = Number((Date.now() - reservationTime) / 1000 / 60);
+    const min = differenceInMinutes(Date.now() - reservationTime);
 
-    return min.toFixed(0);
+    return min;
   };
 
   return (
