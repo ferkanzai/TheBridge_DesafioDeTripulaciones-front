@@ -82,7 +82,6 @@ const Map = () => {
   };
 
   const onClick = (event) => {
-    console.log(event);
     const feature = event.features[0];
 
     if (feature) {
