@@ -1,3 +1,33 @@
+@import "../../styles/common.scss";
+
 .mapboxgl-ctrl-logo {
   display: none !important;
+}
+
+.map {
+  &__options {
+    position: absolute;
+    top: 1.5rem;
+    right: 1rem;
+    display: flex;
+
+    &__button {
+      @include flex-center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin: 0.25rem;
+      background-color: $accentColor;
+    }
+  }
+
+  &__filter-panel {
+    width: 100%;
+    height: calc(100vh - 56px);
+    background-color: white;
+    z-index: 9;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
 }

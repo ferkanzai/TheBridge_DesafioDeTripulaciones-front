@@ -6,8 +6,8 @@ import ReactMapGL, {
   NavigationControl,
 } from "react-map-gl";
 
-import "mapbox-gl/dist/mapbox-gl.css";
-import "./index.scss";
+import ChargePointLegend from "../../components/ChargePointLegend";
+import FilterPanel from "../../components/FilterPanel";
 
 import { getChargePoints } from "../../services/charge-points";
 
@@ -17,6 +17,12 @@ import {
   unclusteredPointLayer,
 } from "./layers";
 
+import search from "../../svg/search.svg";
+import filterOptions from "../../svg/filter-options.svg";
+
+import "mapbox-gl/dist/mapbox-gl.css";
+import "./index.scss";
+
 const { REACT_APP_MAPBOX_ACCESS_TOKEN } = process.env;
 
 const Map = () => {
@@ -24,6 +30,8 @@ const Map = () => {
   const [userLat, setUserLat] = useState(null);
   const [userLng, setUserLng] = useState(null);
   const [chargePoints, setChargePoints] = useState([]);
+  const [viewLegend, setViewLegend] = useState(true);
+  const [viewFilterPanel, setViewFilterPanel] = useState(false);
   const [viewport, setViewport] = useState({
     latitude: userLat || 40,
     longitude: userLng || -3,
@@ -59,6 +67,10 @@ const Map = () => {
 
   const mapRef = useRef(null);
 
+  const showChargePointInformation = (chargePoint) => {
+    console.log(chargePoint.id);
+  };
+
   const onClick = (event) => {
     console.log(event);
     const feature = event.features[0];
@@ -82,7 +94,7 @@ const Map = () => {
       });
     }
     if (feature.layer.id === "unclustered-point") {
-      console.log(feature.properties);
+      showChargePointInformation(feature.properties);
     }
   };
 
@@ -98,48 +110,78 @@ const Map = () => {
     })),
   };
 
+  const hideLegend = () => setViewLegend(false);
+  const toggleFilter = () => {
+    setViewFilterPanel(true);
+  };
+
   return (
-    <ReactMapGL
-      width="100vw"
-      height="calc(100vh - 56px)"
-      className="map"
-      {...viewport}
-      onViewportChange={(nextViewport) => setViewport(nextViewport)}
-      mapStyle="mapbox://styles/mapbox/streets-v11"
-      accessToken={REACT_APP_MAPBOX_ACCESS_TOKEN}
-      interactiveLayerIds={[clusterLayer.id, unclusteredPointLayer.id]}
-      onClick={onClick}
-      ref={mapRef}
-      attributionControl={false}
-    >
-      <NavigationControl
-        style={{
-          left: 10,
-          bottom: 10,
-        }}
-      />
-      <GeolocateControl
-        style={{
-          right: 10,
-          bottom: 10,
-        }}
-        positionOptions={{ enableHighAccuracy: true }}
-        trackUserLocation={true}
-        auto
-      />
-      <Source
-        id="charge-points"
-        type="geojson"
-        data={data}
-        cluster={true}
-        clusterMaxZoom={14}
-        clusterRadius={50}
-      >
-        <Layer {...clusterLayer} />
-        <Layer {...clusterCountLayer} />
-        <Layer {...unclusteredPointLayer} />
-      </Source>
-    </ReactMapGL>
+    <>
+      {viewLegend ? (
+        <ChargePointLegend quitLegend={hideLegend} />
+      ) : (
+        <div className="map">
+          <ReactMapGL
+            width="100vw"
+            height="calc(100vh - 56px)"
+            className="map__view"
+            {...viewport}
+            onViewportChange={(nextViewport) => setViewport(nextViewport)}
+            mapStyle="mapbox://styles/mapbox/streets-v11"
+            accessToken={REACT_APP_MAPBOX_ACCESS_TOKEN}
+            interactiveLayerIds={[clusterLayer.id, unclusteredPointLayer.id]}
+            onClick={onClick}
+            ref={mapRef}
+            attributionControl={false}
+          >
+            <NavigationControl
+              style={{
+                left: 10,
+                bottom: 10,
+              }}
+            />
+            <GeolocateControl
+              style={{
+                right: 10,
+                bottom: 10,
+              }}
+              positionOptions={{ enableHighAccuracy: true }}
+              trackUserLocation={true}
+              auto
+            />
+            <Source
+              id="charge-points"
+              type="geojson"
+              data={data}
+              cluster={true}
+              clusterMaxZoom={14}
+              clusterRadius={50}
+            >
+              <Layer {...clusterLayer} />
+              <Layer {...clusterCountLayer} />
+              <Layer {...unclusteredPointLayer} />
+            </Source>
+          </ReactMapGL>
+          <div className="map__options">
+            <div className="map__options__button">
+              <img src={search} alt="search" />
+            </div>
+            <div className="map__options__button" onClick={toggleFilter}>
+              <img src={filterOptions} alt="filter" />
+            </div>
+          </div>
+        </div>
+      )}
+      {viewFilterPanel && (
+        <FilterPanel
+          setFilterPanel={setViewFilterPanel}
+          lat={userLat}
+          lng={userLng}
+          setChargePoints={setChargePoints}
+          className="map__"
+        />
+      )}
+    </>
   );
 };
 
