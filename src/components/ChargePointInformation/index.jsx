@@ -138,7 +138,7 @@ const ChargePointInformation = ({
       activeReservation?.expiration_date + 2 * 60 * 60 * 1000
     ).getTime();
 
-    const min = differenceInMinutes(watch - reservationTime);
+    const min = differenceInMinutes(watch, reservationTime);
 
     if (min.toFixed(0) <= 0) {
       setReservationOk(false);
