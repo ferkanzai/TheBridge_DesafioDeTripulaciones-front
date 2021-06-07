@@ -1,4 +1,3 @@
-/* eslint-disable import/no-webpack-loader-syntax */
 import { useEffect, useRef, useState } from "react";
 import ReactMapGL, {
   Source,
@@ -6,8 +5,8 @@ import ReactMapGL, {
   GeolocateControl,
   NavigationControl,
 } from "react-map-gl";
-// eslint-disable-next-line no-unused-vars
-import mapboxgl from "!mapbox-gl";
+import mapboxgl from "mapbox-gl/dist/mapbox-gl";
+import MapboxWorker from "mapbox-gl/dist/mapbox-gl-csp-worker";
 
 import ChargePointLegend from "../../components/ChargePointLegend";
 import FilterPanel from "../../components/FilterPanel";
@@ -30,6 +29,7 @@ import "mapbox-gl/dist/svg/mapboxgl-ctrl-geolocate.svg";
 import "mapbox-gl/dist/svg/mapboxgl-ctrl-zoom-in.svg";
 import "mapbox-gl/dist/svg/mapboxgl-ctrl-zoom-out.svg";
 
+mapboxgl.workerClass = MapboxWorker;
 const { REACT_APP_MAPBOX_ACCESS_TOKEN } = process.env;
 
 const Map = () => {
