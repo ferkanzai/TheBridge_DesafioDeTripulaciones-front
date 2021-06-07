@@ -4,7 +4,7 @@ import "mapbox-gl/dist/svg/mapboxgl-ctrl-geolocate.svg";
 import "mapbox-gl/dist/svg/mapboxgl-ctrl-zoom-in.svg";
 import "mapbox-gl/dist/svg/mapboxgl-ctrl-zoom-out.svg";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ReactMapboxGl, { Marker, Cluster } from "react-mapbox-gl";
 import mapboxgl from "mapbox-gl";
 import { v4 as uuid } from "uuid";
@@ -14,7 +14,10 @@ import FilterPanel from "../../components/FilterPanel";
 import ChargePointLegend from "../../components/ChargePointLegend";
 import ChargePointInformation from "../../components/ChargePointInformation";
 
+import { UserContext } from "../../store";
+
 import { getChargePoints } from "../../services/charge-points";
+import { getActiveReservation } from "../../services/reservations";
 
 import { mappingColors } from "../../utils";
 
@@ -32,6 +35,7 @@ const Map = ReactMapboxGl({
 });
 
 const MapWrapper = () => {
+  const { token, setActiveReservation } = useContext(UserContext);
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
   const [userLat, setUserLat] = useState(null);
@@ -64,6 +68,11 @@ const MapWrapper = () => {
       }
     }
   }, [status]);
+
+  useEffect(() => {
+    if (token)
+      getActiveReservation(token).then((res) => setActiveReservation(res[0]));
+  }, [token, setActiveReservation]);
 
   useEffect(() => {
     getChargePoints(userLat, userLng).then((res) => setChargePoints(res));

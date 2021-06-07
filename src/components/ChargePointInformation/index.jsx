@@ -92,7 +92,7 @@ const ChargePointInformation = ({
   };
 
   useEffect(() => {
-    console.log(singleChargePoint);
+    console.log(activeReservation);
     getConenctionsByChargePoint(singleChargePoint.id)
       .then((res) => {
         const connectionsTypes = res.map(
@@ -110,8 +110,18 @@ const ChargePointInformation = ({
           setIsFavorite(true);
       });
 
-    activeReservation?.connection_id === connectionId && setReservationOk(true);
-  }, [singleChargePoint, userFavorites, activeReservation, connectionId]);
+    if (activeReservation) {
+      console.log("test");
+      activeReservation.connection_id === connectionId &&
+        setReservationOk(true);
+    }
+  }, [
+    singleChargePoint,
+    userFavorites,
+    activeReservation,
+    connectionId,
+    token,
+  ]);
 
   const handleFavorite = () => {
     getIsFavorite(token, singleChargePoint.id).then((res) => {
@@ -138,7 +148,7 @@ const ChargePointInformation = ({
       activeReservation?.expiration_date + 2 * 60 * 60 * 1000
     );
 
-    const min = differenceInMinutes(watch, reservationTime);
+    const min = differenceInMinutes(reservationTime, watch);
 
     if (min <= 0) {
       setReservationOk(false);
