@@ -5,6 +5,7 @@ import ReactMapGL, {
   GeolocateControl,
   NavigationControl,
 } from "react-map-gl";
+import mapboxgl from "mapbox-gl";
 
 import ChargePointLegend from "../../components/ChargePointLegend";
 import FilterPanel from "../../components/FilterPanel";
@@ -24,6 +25,10 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import "./index.scss";
 
 const { REACT_APP_MAPBOX_ACCESS_TOKEN } = process.env;
+
+mapboxgl.workerClass =
+  // eslint-disable-next-line import/no-webpack-loader-syntax
+  require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 
 const Map = () => {
   const [status, setStatus] = useState(0);
