@@ -58,7 +58,7 @@ const ChargePointInformation = ({
   useEffect(() => {
     if (activeReservation) {
       let id = setInterval(() => {
-        setWatch(new Date());
+        setWatch(new Date().getTime());
       }, 6000);
 
       return () => clearInterval(id);
@@ -135,7 +135,7 @@ const ChargePointInformation = ({
   const getMin = () => {
     const reservationTime = new Date(
       activeReservation?.expiration_date + 2 * 60 * 60 * 1000
-    );
+    ).getTime();
 
     const min = Number((reservationTime - watch) / 1000 / 60);
 
