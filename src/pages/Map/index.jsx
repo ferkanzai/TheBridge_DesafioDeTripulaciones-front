@@ -1,9 +1,4 @@
-import "mapbox-gl/dist/mapbox-gl.css";
-import "mapbox-gl/dist/svg/mapboxgl-ctrl-compass.svg";
-import "mapbox-gl/dist/svg/mapboxgl-ctrl-geolocate.svg";
-import "mapbox-gl/dist/svg/mapboxgl-ctrl-zoom-in.svg";
-import "mapbox-gl/dist/svg/mapboxgl-ctrl-zoom-out.svg";
-
+/* eslint-disable import/no-webpack-loader-syntax */
 import { useEffect, useRef, useState } from "react";
 import ReactMapGL, {
   Source,
@@ -11,6 +6,8 @@ import ReactMapGL, {
   GeolocateControl,
   NavigationControl,
 } from "react-map-gl";
+// eslint-disable-next-line no-unused-vars
+import mapboxgl from "!mapbox-gl";
 
 import ChargePointLegend from "../../components/ChargePointLegend";
 import FilterPanel from "../../components/FilterPanel";
@@ -27,6 +24,11 @@ import search from "../../svg/search.svg";
 import filterOptions from "../../svg/filter-options.svg";
 
 import "./index.scss";
+import "mapbox-gl/dist/mapbox-gl.css";
+import "mapbox-gl/dist/svg/mapboxgl-ctrl-compass.svg";
+import "mapbox-gl/dist/svg/mapboxgl-ctrl-geolocate.svg";
+import "mapbox-gl/dist/svg/mapboxgl-ctrl-zoom-in.svg";
+import "mapbox-gl/dist/svg/mapboxgl-ctrl-zoom-out.svg";
 
 const { REACT_APP_MAPBOX_ACCESS_TOKEN } = process.env;
 
