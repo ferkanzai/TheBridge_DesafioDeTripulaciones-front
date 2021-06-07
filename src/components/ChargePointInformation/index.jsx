@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import Rating from "@material-ui/lab/Rating";
+import { differenceInMinutes } from "date-fns";
 
 import BackArrow from "../BackArrow";
 
@@ -58,7 +59,7 @@ const ChargePointInformation = ({
   useEffect(() => {
     if (activeReservation) {
       let id = setInterval(() => {
-        setWatch(new Date(Date.now().replace(/-/g, "/")).getTime());
+        setWatch(new Date(Date.now()));
       }, 6000);
 
       return () => clearInterval(id);
@@ -134,13 +135,10 @@ const ChargePointInformation = ({
 
   const getMin = () => {
     const reservationTime = new Date(
-      (activeReservation?.expiration_date + 2 * 60 * 60 * 1000).replace(
-        /-/g,
-        "/"
-      )
+      activeReservation?.expiration_date + 2 * 60 * 60 * 1000
     ).getTime();
 
-    const min = Number((reservationTime - watch) / 1000 / 60);
+    const min = differenceInMinutes(watch - reservationTime);
 
     if (min.toFixed(0) <= 0) {
       setReservationOk(false);
