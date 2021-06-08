@@ -7,7 +7,7 @@ import charge from "../../svg/charge.svg";
 import "./index.scss";
 import { mappingColors } from "../../utils";
 
-const ChargePointFullInfo = ({ chargePoint }) => {
+const ChargePointData = ({ chargePoint }) => {
   return (
     <div className="cpFullInfo">
       <p className="cpFullInfo__name">{chargePoint.name}</p>
@@ -59,4 +59,4 @@ const ChargePointFullInfo = ({ chargePoint }) => {
   );
 };
 
-export default ChargePointFullInfo;
+export default ChargePointData;

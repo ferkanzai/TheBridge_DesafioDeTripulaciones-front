@@ -1,4 +1,4 @@
-import ChargePointFullInfo from "../ChargePointFullinfo";
+import ChargePointData from "../ChargePointData";
 import StationIcon from "../StationIcon";
 
 import { UserContext } from "../../store";
@@ -62,7 +62,7 @@ const ChargePointInformation = ({
         </div>
       </div>
       <div className={`${className}chargePointInformation__info`}>
-        <ChargePointFullInfo chargePoint={chargePoint} />
+        <ChargePointData chargePoint={chargePoint} />
       </div>
       <div className={`${className}chargePointInformation__buttons`}>
         <button
