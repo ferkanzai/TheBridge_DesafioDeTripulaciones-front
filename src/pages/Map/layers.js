@@ -30,7 +30,6 @@ export const clusterCountLayer = {
 };
 
 const free = ["==", ["get", "waiting_time"], 0];
-const lessThan5 = ["<=", ["get", "waiting_time"], 5];
 const lessThan15 = [
   "all",
   [">", ["get", "waiting_time"], 5],
@@ -41,20 +40,13 @@ const lessThan30 = [
   [">", ["get", "waiting_time"], 5],
   ["<=", ["get", "waiting_time"], 30],
 ];
-const lessThan45 = [
+const lessThan40 = [
   "all",
-  [">", ["get", "waiting_time"], 5],
-  ["<=", ["get", "waiting_time"], 30],
+  [">", ["get", "waiting_time"], 30],
+  ["<=", ["get", "waiting_time"], 40],
 ];
 
-const colors = [
-  "#1DAE69",
-  "#89CC33",
-  "#C5D22A",
-  "#FAD966",
-  "#B75454",
-  "#C4C4C4",
-];
+const colors = ["#1DAE69", "#C5D22A", "#FAD966", "#B75454", "#C4C4C4"];
 
 export const unclusteredPointLayer = {
   id: "unclustered-point",
@@ -69,15 +61,13 @@ export const unclusteredPointLayer = {
       "case",
       free,
       colors[0],
-      lessThan5,
-      colors[1],
       lessThan15,
-      colors[2],
+      colors[1],
       lessThan30,
+      colors[2],
+      lessThan40,
       colors[3],
-      lessThan45,
       colors[4],
-      colors[5],
     ],
   },
 };
