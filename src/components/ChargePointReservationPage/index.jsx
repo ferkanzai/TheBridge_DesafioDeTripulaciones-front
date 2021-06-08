@@ -4,6 +4,8 @@ import { differenceInMinutes } from "date-fns";
 import BackArrow from "../BackArrow";
 import ChargePointData from "../ChargePointData";
 import PopupActiveReservation from "../PopupActiveReservation";
+import PopupCancelReservation from "../PopupCancelReservation";
+import PopupExtendReservation from "../PopupExtendReservation";
 import StationIcon from "../StationIcon";
 
 import { UserContext } from "../../store";
@@ -15,7 +17,10 @@ import {
   getIsFavorite,
   postAddFavorite,
 } from "../../services/favorites";
-import { postStartReservation } from "../../services/reservations";
+import {
+  postStartReservation,
+  putCancelReservation,
+} from "../../services/reservations";
 import { getConenctionsByChargePoint } from "../../services/connections";
 
 import "./index.scss";
@@ -34,6 +39,8 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
   const [reservationEndTime, setReservationEndTime] = useState(null);
   const [time, setTime] = useState(null);
   const [popupActiveReservation, setPopupActiveReservation] = useState(false);
+  const [popupCancelReservation, setPopupCancelReservation] = useState(false);
+  const [popupExtendReservation, setPopupExtendReservation] = useState(false);
 
   useEffect(() => {
     if (isActiveReservation) {
@@ -110,6 +117,26 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
     setPopupActiveReservation(!popupActiveReservation);
   };
 
+  const cancelReservation = () => {
+    putCancelReservation(token, activeReservation.id).then((res) => {
+      setActiveReservation(null);
+      setIsActiveReservation(false);
+      setPopupCancelReservation(!popupCancelReservation);
+    });
+  };
+
+  const handleCancelReservationPopup = () => {
+    setPopupCancelReservation(!popupCancelReservation);
+  };
+
+  const handleCancelButton = () => {
+    if (isActiveReservation) {
+      handleCancelReservationPopup();
+    } else {
+      setIsReservationPage(false);
+    }
+  };
+
   return (
     <div className="reservationPage">
       <div className="reservationPage__top">
@@ -153,6 +180,7 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
               ? "reservationPage__buttons__active"
               : "reservationPage__buttons__inactive"
           }
+          onClick={handleCancelButton}
         >
           Cancelar
         </button>
@@ -185,6 +213,13 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
           handleClickPopupActiveReservation={handleClickPopupActiveReservation}
         />
       )}
+      {popupCancelReservation && (
+        <PopupCancelReservation
+          cancelReservation={cancelReservation}
+          handleCancelReservationPopup={handleCancelReservationPopup}
+        />
+      )}
+      {popupExtendReservation && <PopupExtendReservation />}
     </div>
   );
 };

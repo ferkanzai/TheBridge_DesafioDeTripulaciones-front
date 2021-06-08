@@ -1,0 +1,77 @@
+@import "../../styles/common.scss";
+
+.popupCancelReservation {
+  position: fixed;
+  background: rgba(104, 113, 159, 0.5);
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+
+  &__title {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+    height: auto;
+    margin-top: calc(100vh - 85vh - 20px);
+    background-color: #dfba4b;
+    padding: 2rem 0;
+
+    &__text {
+      max-width: 50%;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    max-width: 100%;
+    height: auto;
+    max-height: 70vh;
+    background: #f2f2f2;
+    padding: 1rem;
+
+    & span {
+      margin: 0.8rem;
+    }
+
+    &__bold {
+      font-weight: 700;
+      text-align: center;
+    }
+
+    &__normal {
+      font-weight: 400;
+      color: #8c8a8a;
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    justify-content: space-around;
+
+    & button {
+      border: none;
+      margin: 0.5rem 0;
+    }
+
+    &__extend {
+      @include blue-green-button;
+    }
+
+    &__no {
+      color: #8c8a8a;
+    }
+  }
+}
