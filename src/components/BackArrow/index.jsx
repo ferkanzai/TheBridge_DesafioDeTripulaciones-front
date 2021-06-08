@@ -14,7 +14,7 @@ const BackArrow = ({
     if (goProfile) history.push("/profile");
     else {
       setIsReservationPage(false);
-      setError(false);
+      // setError(false);
     }
   };
 

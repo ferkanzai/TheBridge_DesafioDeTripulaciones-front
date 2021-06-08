@@ -11,6 +11,7 @@ import MapboxWorker from "mapbox-gl/dist/mapbox-gl-csp-worker";
 
 import ChargePointInformation from "../../components/ChargePointInformation";
 import ChargePointLegend from "../../components/ChargePointLegend";
+import ChargePointReservationPage from "../../components/ChargePointReservationPage";
 import FilterPanel from "../../components/FilterPanel";
 
 import { getChargePoints } from "../../services/charge-points";
@@ -39,6 +40,7 @@ const Map = () => {
   const [viewFilterPanel, setViewFilterPanel] = useState(false);
   const [viewChargePointInfo, setViewChargePointInfo] = useState(false);
   const [singleChargePoint, setSingleChargePoint] = useState(null);
+  const [viewReservationPage, setViewReservationPage] = useState(false);
   const [viewport, setViewport] = useState({
     latitude: userLat || 40,
     longitude: userLng || -3,
@@ -136,8 +138,13 @@ const Map = () => {
   };
 
   const hideChargePointInformation = () => {
-    setViewChargePointInfo(false);
+    setViewChargePointInfo(!viewChargePointInfo);
     setSingleChargePoint(null);
+  };
+
+  const handleReservationView = () => {
+    setViewReservationPage(!viewReservationPage);
+    setViewChargePointInfo(!viewChargePointInfo);
   };
 
   return (
@@ -213,6 +220,13 @@ const Map = () => {
           chargePoint={singleChargePoint}
           className="map__"
           hideChargePointInformation={hideChargePointInformation}
+          handleReservationView={handleReservationView}
+        />
+      )}
+      {viewReservationPage && (
+        <ChargePointReservationPage
+          chargePoint={singleChargePoint}
+          setIsReservationPage={handleReservationView}
         />
       )}
     </>

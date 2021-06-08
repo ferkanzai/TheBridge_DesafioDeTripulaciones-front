@@ -1,7 +1,12 @@
+import { useContext, useEffect, useState } from "react";
+
 import ChargePointData from "../ChargePointData";
 import StationIcon from "../StationIcon";
+import BackArrow from "../BackArrow";
 
 import { UserContext } from "../../store";
+
+import { chooseSrc } from "../../utils";
 
 import {
   deleteRemoveFavorite,
@@ -9,17 +14,9 @@ import {
   postAddFavorite,
 } from "../../services/favorites";
 
-import { chooseSrc } from "../../utils";
-
 import "./index.scss";
-import { useContext, useEffect, useState } from "react";
 
-const ChargePointInformation = ({
-  chargePoint,
-  className,
-  hideChargePointInformation,
-  handleReservationView,
-}) => {
+const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
   const { token, userFavorites, setUserFavorites } = useContext(UserContext);
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -51,38 +48,31 @@ const ChargePointInformation = ({
   };
 
   return (
-    <>
-      <div className={`${className}chargePointInformation`}>
-        <div className={`${className}chargePointInformation__top`}>
+    <div className="reservationPage">
+      <div className="reservationPage__top">
+        <div className="reservationPage__top__left">
+          <BackArrow
+            className="reservationPage__top__left__arrow"
+            setIsReservationPage={setIsReservationPage}
+          />
           <StationIcon
             isFavorite={isFavorite}
             handleHeartClick={handleHeartClick}
           />
-          <div className={`${className}chargePointInformation__top__operator`}>
+        </div>
+        <div className="reservationPage__top__right">
+          <p>Reserva actual</p>
+          <div className="reservationPage__top__right__operator">
             <span>{chargePoint.operator}</span>
             <img src={chooseSrc[chargePoint.operator]} alt="" />
           </div>
         </div>
-        <div className={`${className}chargePointInformation__info`}>
+        <div className="reservationPage__info">
           <ChargePointData chargePoint={chargePoint} />
         </div>
-        <div className={`${className}chargePointInformation__buttons`}>
-          <button
-            onClick={hideChargePointInformation}
-            className={`${className}chargePointInformation__buttons__cancel`}
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={handleReservationView}
-            className={`${className}chargePointInformation__buttons__reserve`}
-          >
-            Reservar
-          </button>
-        </div>
       </div>
-    </>
+    </div>
   );
 };
 
-export default ChargePointInformation;
+export default ChargePointReservationPage;
