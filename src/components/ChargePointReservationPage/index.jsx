@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import { useHistory } from "react-router";
 import { differenceInMinutes } from "date-fns";
 
 import BackArrow from "../BackArrow";
@@ -28,6 +29,7 @@ import "./index.scss";
 
 const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
   const {
+    user,
     token,
     userFavorites,
     setUserFavorites,
@@ -43,6 +45,8 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
   const [popupCancelReservation, setPopupCancelReservation] = useState(false);
   const [popupExtendReservation, setPopupExtendReservation] = useState(false);
   const [message, setMessage] = useState("RESERVA REALIZADA CON ÉXITO");
+
+  const history = useHistory();
 
   useEffect(() => {
     if (isActiveReservation) {
@@ -86,6 +90,9 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
   };
 
   const handleReservation = () => {
+    if (!user) {
+      history.push("/start");
+    }
     if (isActiveReservation) {
       handleClickPopupActiveReservation();
     } else {
