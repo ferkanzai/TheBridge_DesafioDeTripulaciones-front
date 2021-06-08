@@ -1,9 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { differenceInMinutes } from "date-fns";
 
-import ChargePointData from "../ChargePointData";
-import StationIcon from "../StationIcon";
 import BackArrow from "../BackArrow";
+import ChargePointData from "../ChargePointData";
+import PopupActiveReservation from "../PopupActiveReservation";
+import StationIcon from "../StationIcon";
 
 import { UserContext } from "../../store";
 
@@ -32,6 +33,7 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
   const [connectionId, setConnectionId] = useState([]);
   const [reservationEndTime, setReservationEndTime] = useState(null);
   const [time, setTime] = useState(null);
+  const [popupActiveReservation, setPopupActiveReservation] = useState(false);
 
   useEffect(() => {
     if (isActiveReservation) {
@@ -76,7 +78,7 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
 
   const handleReservation = () => {
     if (isActiveReservation) {
-      console.log("active");
+      handleClickPopupActiveReservation();
     } else {
       postStartReservation(token, connectionId).then((res) => {
         setIsActiveReservation(true);
@@ -102,6 +104,10 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
     }
 
     return diffInMins;
+  };
+
+  const handleClickPopupActiveReservation = () => {
+    setPopupActiveReservation(!popupActiveReservation);
   };
 
   return (
@@ -141,9 +147,21 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
         </div>
       )}
       <div className="reservationPage__buttons">
-        <button className="reservationPage__buttons__inactive">Cancelar</button>
         <button
-          className="reservationPage__buttons__active"
+          className={
+            isActiveReservation
+              ? "reservationPage__buttons__active"
+              : "reservationPage__buttons__inactive"
+          }
+        >
+          Cancelar
+        </button>
+        <button
+          className={
+            !isActiveReservation
+              ? "reservationPage__buttons__active"
+              : "reservationPage__buttons__inactive"
+          }
           onClick={handleReservation}
         >
           Reservar
@@ -161,6 +179,11 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
             <button>Ampliar</button>
           </div>
         </>
+      )}
+      {popupActiveReservation && (
+        <PopupActiveReservation
+          handleClickPopupActiveReservation={handleClickPopupActiveReservation}
+        />
       )}
     </div>
   );
