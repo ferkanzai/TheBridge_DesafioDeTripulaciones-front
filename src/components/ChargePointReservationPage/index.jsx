@@ -51,6 +51,13 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
     <div className="reservationPage">
       <div className="reservationPage__top">
         <div className="reservationPage__top__left">
+          <p>Reserva actual</p>
+          <div className="reservationPage__top__right__operator">
+            <span>{chargePoint.operator}</span>
+            <img src={chooseSrc[chargePoint.operator]} alt="" />
+          </div>
+        </div>
+        <div className="reservationPage__top__right">
           <BackArrow
             className="reservationPage__top__left__arrow"
             setIsReservationPage={setIsReservationPage}
@@ -60,16 +67,13 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
             handleHeartClick={handleHeartClick}
           />
         </div>
-        <div className="reservationPage__top__right">
-          <p>Reserva actual</p>
-          <div className="reservationPage__top__right__operator">
-            <span>{chargePoint.operator}</span>
-            <img src={chooseSrc[chargePoint.operator]} alt="" />
-          </div>
-        </div>
-        <div className="reservationPage__info">
-          <ChargePointData chargePoint={chargePoint} />
-        </div>
+      </div>
+      <div className="reservationPage__info">
+        <ChargePointData chargePoint={chargePoint} />
+      </div>
+      <div className="reservationPage__buttons">
+        <button className="reservationPage__buttons__inactive">Cancelar</button>
+        <button className="reservationPage__buttons__active">Reservar</button>
       </div>
     </div>
   );

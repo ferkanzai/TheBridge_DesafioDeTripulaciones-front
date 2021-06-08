@@ -2,14 +2,26 @@
 
 .reservationPage {
   background-color: #f2f2f2;
+  display: flex;
+  flex-direction: column;
   height: 100vh;
+  overflow-y: scroll;
   position: absolute;
   top: 0;
   width: 100vw;
   z-index: 11;
 
   &__top {
+    align-items: center;
+    display: flex;
+    justify-content: space-around;
+    padding-top: 1rem;
+
     &__right {
+      align-items: flex-end;
+      display: flex;
+      flex-direction: column;
+
       &__operator {
         align-items: center;
         background-color: white;
@@ -30,6 +42,43 @@
           width: 20px;
         }
       }
+    }
+
+    &__left {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: space-around;
+
+      & p {
+        color: $primary;
+        font-size: 1.5rem;
+        font-weight: 500;
+      }
+    }
+  }
+
+  &__info {
+    padding: 0 1rem;
+  }
+
+  &__buttons {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
+
+    & button {
+      margin: 0.5rem 0.5rem;
+      padding: 1rem 3rem;
+    }
+
+    &__inactive {
+      @include grey-button;
+    }
+
+    &__active {
+      @include blue-green-button;
     }
   }
 }
