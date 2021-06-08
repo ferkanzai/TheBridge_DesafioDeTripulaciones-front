@@ -20,6 +20,7 @@ import {
 import {
   postStartReservation,
   putCancelReservation,
+  putExtendReservation,
 } from "../../services/reservations";
 import { getConenctionsByChargePoint } from "../../services/connections";
 
@@ -41,6 +42,7 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
   const [popupActiveReservation, setPopupActiveReservation] = useState(false);
   const [popupCancelReservation, setPopupCancelReservation] = useState(false);
   const [popupExtendReservation, setPopupExtendReservation] = useState(false);
+  const [message, setMessage] = useState("RESERVA REALIZADA CON ÉXITO");
 
   useEffect(() => {
     if (isActiveReservation) {
@@ -107,6 +109,7 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
       setIsActiveReservation(false);
       setActiveReservation(null);
       setReservationEndTime(null);
+      setPopupExtendReservation(false);
       return;
     }
 
@@ -137,6 +140,18 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
     }
   };
 
+  const extendReservation = () => {
+    putExtendReservation(token, activeReservation?.id).then((res) => {
+      setActiveReservation(res[0]);
+      setPopupExtendReservation(!popupExtendReservation);
+      setMessage("RESERVA AMPLIADA 10 MINUTOS");
+    });
+  };
+
+  const handleExtendPopup = () => {
+    setPopupExtendReservation(!popupExtendReservation);
+  };
+
   return (
     <div className="reservationPage">
       <div className="reservationPage__top">
@@ -164,9 +179,7 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
       {isActiveReservation && (
         <div className="reservationPage__message">
           <div className="reservationPage__message__info">
-            <p className="reservationPage__message__info__text">
-              RESERVA REALIZADA CON ÉXITO
-            </p>
+            <p className="reservationPage__message__info__text">{message}</p>
           </div>
           <p className="reservationPage__message__time">
             *Dispones de {getMin()} min para llegar al punto de carga
@@ -204,7 +217,7 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
               <br />
               (0.50€ por 10 minutos más)
             </span>
-            <button>Ampliar</button>
+            <button onClick={handleExtendPopup}>Ampliar</button>
           </div>
         </>
       )}
@@ -219,7 +232,12 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
           handleCancelReservationPopup={handleCancelReservationPopup}
         />
       )}
-      {popupExtendReservation && <PopupExtendReservation />}
+      {popupExtendReservation && (
+        <PopupExtendReservation
+          extendReservation={extendReservation}
+          handleReservationPopup={handleExtendPopup}
+        />
+      )}
     </div>
   );
 };

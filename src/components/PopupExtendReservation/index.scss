@@ -1,0 +1,81 @@
+@import "../../styles/common.scss";
+
+.popupExtendReservation {
+  background: rgba(104, 113, 159, 0.5);
+  height: 100vh;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+
+  &__title {
+    align-items: flex-start;
+    background-color: #dfba4b;
+    display: flex;
+    justify-content: center;
+    margin-top: calc(100vh - 85vh - 20px);
+    padding: 2rem 0;
+    text-align: center;
+    width: 100%;
+
+    &__text {
+      font-size: 1.5rem;
+      font-weight: 700;
+      max-width: 75%;
+    }
+
+    & img {
+      height: 25px;
+      width: 25px;
+    }
+  }
+
+  &__text {
+    align-items: center;
+    background: #f2f2f2;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    justify-content: center;
+    max-height: 70vh;
+    max-width: 100%;
+    padding: 1rem;
+    position: relative;
+
+    & span {
+      margin: 0.25rem;
+    }
+
+    &__bold {
+      font-weight: 700;
+      max-width: 60%;
+      text-align: center;
+    }
+
+    &__normal {
+      color: #8c8a8a;
+      font-size: 0.875rem;
+      font-weight: 400;
+    }
+  }
+
+  &__buttons {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+    & button {
+      border: none;
+      margin: 0.5rem 0;
+    }
+
+    &__extend {
+      @include blue-green-button;
+    }
+
+    &__no {
+      color: #8c8a8a;
+    }
+  }
+}
