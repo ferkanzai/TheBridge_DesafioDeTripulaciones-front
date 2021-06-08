@@ -13,6 +13,8 @@ import info from "../../svg/info.svg";
 import exit from "../../svg/exit.svg";
 import creditCard from "../../svg/credit-card.svg";
 
+import "./index.scss";
+
 const LinksList = () => {
   const { logout } = useContext(UserContext);
 

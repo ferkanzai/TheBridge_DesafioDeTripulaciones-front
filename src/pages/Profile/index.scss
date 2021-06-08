@@ -1,0 +1,44 @@
+@import "../../styles/common.scss";
+
+.profile {
+  background-color: $primary;
+  color: $greyText;
+  height: 100vh;
+  padding-left: 1rem;
+
+  a {
+    color: $greyText;
+    text-decoration: none;
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    padding-top: 3rem;
+
+    &__title {
+      color: $secondaryAccent;
+      font-size: 1.5rem;
+    }
+
+    &__user {
+      align-items: baseline;
+      display: flex;
+
+      & p {
+        font-size: 1.5rem;
+        margin-left: 1.5rem;
+      }
+
+      &__img-group {
+        position: relative;
+
+        &__icon {
+          filter: invert(0) saturate(0);
+          position: absolute;
+          top: 0;
+        }
+      }
+    }
+  }
+}

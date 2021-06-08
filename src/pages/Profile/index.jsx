@@ -5,6 +5,10 @@ import { getFullProfile } from "../../services/auth";
 import profileIcon from "../../svg/profile-icon.svg";
 import LinksList from "../../components/LinksList";
 
+import userPic from "../../user-pic.png";
+
+import "./index.scss";
+
 const Profile = () => {
   const [fullUser, setFullUser] = useState(null);
 
@@ -16,14 +20,19 @@ const Profile = () => {
   return (
     <div className="profile">
       <div className="profile__info">
-        <p>Perfil</p>
+        <p className="profile__info__title">Perfil</p>
         <div className="profile__info__user">
           <div className="profile__info__user__img-group">
-            <div className="profile__info__user__img-group__img"></div>
+            <img
+              src={userPic}
+              alt=""
+              className="profile__info__user__img-group__img"
+            />
+
             <img
               src={profileIcon}
               alt=""
-              className="profile__info__user__img-group-icon"
+              className="profile__info__user__img-group__icon"
             />
           </div>
           <p>{fullUser && fullUser.name}</p>

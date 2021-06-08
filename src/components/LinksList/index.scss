@@ -1,0 +1,15 @@
+@import "../../styles/common.scss";
+
+.profile__links {
+  margin-top: 3rem;
+
+  &__link {
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+
+    & img {
+      margin-right: 1rem;
+    }
+  }
+}
