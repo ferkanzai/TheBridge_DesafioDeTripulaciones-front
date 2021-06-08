@@ -1,7 +1,7 @@
 @import "../../styles/common.scss";
 
 .reservationPage {
-  background-color: #f2f2f2;
+  background-color: $grey;
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -14,13 +14,14 @@
   &__top {
     align-items: center;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     padding-top: 1rem;
 
     &__right {
       align-items: flex-end;
       display: flex;
       flex-direction: column;
+      margin-left: 1rem;
 
       &__operator {
         align-items: center;
@@ -49,6 +50,7 @@
       flex-direction: column;
       height: 100%;
       justify-content: space-around;
+      margin-right: 1rem;
 
       & p {
         color: $primary;
@@ -59,7 +61,29 @@
   }
 
   &__info {
+    margin: 0 auto;
     padding: 0 1rem;
+  }
+
+  &__message {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    &__info {
+      background-color: $primary;
+      padding: 1.5rem;
+      text-align: center;
+      width: -webkit-fill-available;
+
+      &__text {
+        color: $grey;
+        font-weight: 600;
+        margin: 0 auto;
+        max-width: 13rem;
+      }
+    }
   }
 
   &__buttons {
@@ -79,6 +103,32 @@
 
     &__active {
       @include blue-green-button;
+    }
+  }
+
+  hr {
+    margin-top: 1.5rem;
+    max-width: 400px;
+    width: 90%;
+  }
+
+  &__extend {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin: 0 1rem;
+
+    & span {
+      color: $primary;
+      font-size: 0.875rem;
+      margin-right: 1rem;
+    }
+
+    & button {
+      @include simple-button;
+      background-color: $grey;
+      margin-left: 1rem;
+      padding: 0;
     }
   }
 }
