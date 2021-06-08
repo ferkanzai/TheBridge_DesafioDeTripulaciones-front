@@ -1,73 +1,33 @@
-.mapboxgl-map {
-  height: calc(100vh - 56px);
-  width: 100%;
-  bottom: 56px;
-  z-index: 1;
-}
+@import "../../styles/common.scss";
 
 .mapboxgl-ctrl-logo {
   display: none !important;
 }
 
-/* .mapboxgl-marker {
-  z-index: 0;
-} */
+.map {
+  &__options {
+    position: absolute;
+    top: 1.5rem;
+    right: 1rem;
+    display: flex;
 
-.mapboxgl-ctrl-bottom-left {
-  z-index: 7;
-  bottom: 0px;
-}
+    &__button {
+      @include flex-center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin: 0.25rem;
+      background-color: $accentColor;
+    }
+  }
 
-.mapboxgl-ctrl-bottom-right {
-  z-index: 7;
-  bottom: 9px;
-}
-
-.buttons-div {
-  width: 100%;
-  height: 100px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 8;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-}
-
-.cluster {
-  border-radius: 50%;
-  height: 15px;
-  width: 15px;
-  padding: 15px;
-  background-color: wheat;
-  display: flex;
-  text-align: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.filter-button {
-  z-index: 8;
-  padding: 0 30px;
-  height: 34px;
-  border: 2px solid #333333;
-  background-color: white;
-}
-
-.filter-panel {
-  width: 100%;
-  height: calc(100vh - 56px);
-  background-color: white;
-  z-index: 9;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.marker {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  cursor: pointer;
+  &__filter-panel {
+    width: 100%;
+    height: calc(100vh - 56px);
+    background-color: white;
+    z-index: 9;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
 }

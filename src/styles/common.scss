@@ -1,3 +1,10 @@
+$accentColor: #638fe3;
+$darkPrimary: #020828;
+$primary: #2e3454;
+$lightPrimary: #68719f;
+$stars: #dfba4b;
+$secondaryAccent: #50b7af;
+
 @mixin flex-center {
   display: flex;
   justify-content: center;
@@ -17,15 +24,15 @@
 
 @mixin blue-button {
   @extend .buttons;
-  background-color: #638fe3;
+  background-color: $accentColor;
   color: #2e3454;
 }
 
 @mixin white-button {
   @extend .buttons;
   background-color: #e0e0e0;
-  color: #50b7af;
-  border: 1px solid #50b7af;
+  color: $secondaryAccent;
+  border: 1px solid $secondaryAccent;
 }
 
 @mixin grey-button {
@@ -36,15 +43,15 @@
 
 @mixin blue-green-button {
   @extend .buttons;
-  background-color: #50b7af;
+  background-color: $secondaryAccent;
   color: #2e3454;
 }
 
 @mixin grey-blue-button {
   @extend .buttons;
   background-color: #e0e0e0;
-  color: #638fe3;
-  border: 1px solid #638fe3;
+  color: $accentColor;
+  border: 1px solid $accentColor;
 }
 
 @mixin inputs {

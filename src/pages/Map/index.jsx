@@ -1,53 +1,45 @@
-import "mapbox-gl/dist/mapbox-gl.css";
-import "mapbox-gl/dist/svg/mapboxgl-ctrl-compass.svg";
-import "mapbox-gl/dist/svg/mapboxgl-ctrl-geolocate.svg";
-import "mapbox-gl/dist/svg/mapboxgl-ctrl-zoom-in.svg";
-import "mapbox-gl/dist/svg/mapboxgl-ctrl-zoom-out.svg";
+import { useEffect, useRef, useState } from "react";
+import ReactMapGL, {
+  Source,
+  Layer,
+  GeolocateControl,
+  NavigationControl,
+} from "react-map-gl";
+import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
+import MapboxWorker from "mapbox-gl/dist/mapbox-gl-csp-worker";
 
-import { useContext, useEffect, useState } from "react";
-import ReactMapboxGl, { Marker, Cluster } from "react-mapbox-gl";
-import mapboxgl from "mapbox-gl";
-import { v4 as uuid } from "uuid";
-
-import Button from "../../components/Button";
-import FilterPanel from "../../components/FilterPanel";
 import ChargePointLegend from "../../components/ChargePointLegend";
-import ChargePointInformation from "../../components/ChargePointInformation";
-
-import { UserContext } from "../../store";
+import FilterPanel from "../../components/FilterPanel";
 
 import { getChargePoints } from "../../services/charge-points";
-import { getActiveReservation } from "../../services/reservations";
 
-import { mappingColors } from "../../utils";
+import {
+  clusterLayer,
+  clusterCountLayer,
+  unclusteredPointLayer,
+} from "./layers";
+
+import search from "../../svg/search.svg";
+import filterOptions from "../../svg/filter-options.svg";
 
 import "./index.scss";
+import "mapbox-gl/dist/mapbox-gl.css";
 
-mapboxgl.workerClass =
-  // eslint-disable-next-line import/no-webpack-loader-syntax
-  require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
+mapboxgl.workerClass = MapboxWorker;
+const { REACT_APP_MAPBOX_ACCESS_TOKEN } = process.env;
 
-const Map = ReactMapboxGl({
-  accessToken:
-    "pk.eyJ1IjoiZmVya2FuemFpIiwiYSI6ImNraTFvZGE1azBiY24yd3Fuc3RoYjZ1N3QifQ.825dTY3GMtTjgI5M90Ujrw",
-  logoPosition: "bottom-left",
-  attributionControl: false,
-});
-
-const MapWrapper = () => {
-  const { token, setActiveReservation } = useContext(UserContext);
-  const [lat, setLat] = useState(null);
-  const [lng, setLng] = useState(null);
+const Map = () => {
+  const [status, setStatus] = useState(0);
   const [userLat, setUserLat] = useState(null);
   const [userLng, setUserLng] = useState(null);
-  const [zoom, setZoom] = useState(13);
-  const [status, setStatus] = useState(0);
   const [chargePoints, setChargePoints] = useState([]);
-  const [filterPanel, setFilterPanel] = useState(false);
-  const [initial, setInitial] = useState(true);
-  const [informationVisible, setInformationVisible] = useState(false);
-  const [singleChargePoint, setSingleChargePoint] = useState(null);
-  // const [never, setNever] = useState(false);
+  const [viewLegend, setViewLegend] = useState(true);
+  const [viewFilterPanel, setViewFilterPanel] = useState(false);
+  const [viewport, setViewport] = useState({
+    latitude: userLat || 40,
+    longitude: userLng || -3,
+    zoom: 8,
+  });
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -57,9 +49,12 @@ const MapWrapper = () => {
           (position) => {
             setStatus(11);
             setUserLat(position.coords.latitude);
-            setLat(position.coords.latitude);
             setUserLng(position.coords.longitude);
-            setLng(position.coords.longitude);
+            setViewport({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+              zoom: 13,
+            });
           },
           () => {
             setStatus(status + 1);
@@ -70,173 +65,131 @@ const MapWrapper = () => {
   }, [status]);
 
   useEffect(() => {
-    if (token)
-      getActiveReservation(token).then((res) => setActiveReservation(res[0]));
-  }, [token, setActiveReservation]);
-
-  useEffect(() => {
     getChargePoints(userLat, userLng).then((res) => setChargePoints(res));
   }, [userLat, userLng]);
 
-  // const handleMove = (map) => {
-  //   console.log(map.getCenter());
-  //   const { lng, lat } = map.getCenter();
-  //   const zoom = map.getZoom();
-  //   setLng(lng);
-  //   setLat(lat);
-  //   setZoom(zoom);
-  // };
-
-  const clusterMarker = (coordinates, points) => (
-    <Marker coordinates={coordinates} className="cluster" maxZoom={14}>
-      {points}
-    </Marker>
-  );
+  const mapRef = useRef(null);
 
   const showChargePointInformation = (chargePoint) => {
-    setInformationVisible(true);
-    setLat(chargePoint.latitude);
-    setLng(chargePoint.longitude);
-    setZoom(14.5);
-    setSingleChargePoint(chargePoint);
+    console.log(chargePoint.id);
   };
 
-  const hideChargePointInformation = () => {
-    setInformationVisible(false);
-    setSingleChargePoint(null);
+  const onClick = (event) => {
+    const feature = event.features[0];
+
+    if (feature) {
+      if (feature.layer.id === "clusters") {
+        const clusterId = feature.properties.cluster_id;
+
+        const mapboxSource = mapRef.current.getMap().getSource("charge-points");
+
+        mapboxSource.getClusterExpansionZoom(clusterId, (err, zoom) => {
+          if (err) {
+            return;
+          }
+
+          setViewport({
+            ...viewport,
+            longitude: feature.geometry.coordinates[0],
+            latitude: feature.geometry.coordinates[1],
+            zoom,
+            transitionDuration: 200,
+          });
+        });
+      }
+      if (feature.layer.id === "unclustered-point") {
+        showChargePointInformation(feature.properties);
+      }
+    } else {
+      console.log("click");
+    }
   };
 
+  const data = {
+    type: "FeatureCollection",
+    features: chargePoints.map((chargePoint) => ({
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [chargePoint.longitude, chargePoint.latitude],
+      },
+      properties: { ...chargePoint },
+    })),
+  };
+
+  const hideLegend = () => setViewLegend(false);
   const toggleFilter = () => {
-    setFilterPanel(true);
-  };
-
-  const geolocate = new mapboxgl.GeolocateControl({
-    positionOptions: {
-      enableHighAccuracy: true,
-    },
-    trackUserLocation: true,
-    showUserLocation: true,
-  });
-
-  const navigation = new mapboxgl.NavigationControl({
-    showCompass: true,
-    showZoom: true,
-  });
-
-  const quitLegend = () => setInitial(false);
-
-  const setCenter = (map) => {
-    console.log(map.getCenter());
-    console.log(map.getZoom());
-    // const { lng, lat } = map.getCenter();
-    // const zoom = map.getZoom();
-    // setLat(lat);
-    // setLng(lng);
-    // setZoom(zoom);
+    setViewFilterPanel(true);
   };
 
   return (
     <>
-      {initial /*&& !never*/ ? (
-        <ChargePointLegend quitLegend={quitLegend} />
+      {viewLegend ? (
+        <ChargePointLegend quitLegend={hideLegend} />
       ) : (
-        <>
-          <Map
-            // eslint-disable-next-line react/style-prop-object
-            style="mapbox://styles/mapbox/streets-v11"
-            containerStyle={{
-              height: "100vh",
-              width: "100vw",
-            }}
-            movingMethod="easeTo"
-            center={[lng, lat]}
-            zoom={[zoom]}
-            onStyleLoad={(map) => {
-              map.addControl(navigation, "bottom-left");
-              map.addControl(geolocate, "bottom-right");
-
-              geolocate.on("geolocate", function (pos) {
-                setLat(pos.coords.latitude);
-                setLng(pos.coords.longitude);
-              });
-            }}
-            onMoveEnd={(map) => setCenter(map)}
-            // onDragEnd={() =>
-            //   chargePointInformation ? setChargePointInformation(false) : null
-            // }
-            // onMove={() => setChargePointInformation(!chargePointInformation)}
+        <div className="map">
+          <ReactMapGL
+            width="100vw"
+            height="calc(100vh - 56px)"
+            className="map__view"
+            {...viewport}
+            onViewportChange={(nextViewport) => setViewport(nextViewport)}
+            mapStyle="mapbox://styles/mapbox/streets-v11"
+            accessToken={REACT_APP_MAPBOX_ACCESS_TOKEN}
+            interactiveLayerIds={[clusterLayer.id, unclusteredPointLayer.id]}
+            onClick={onClick}
+            ref={mapRef}
+            attributionControl={false}
           >
-            {chargePoints.length > 25 ? (
-              <Cluster
-                ClusterMarkerFactory={clusterMarker}
-                zoomOnClick={true}
-                key={uuid()}
-              >
-                {chargePoints &&
-                  chargePoints.map((chargePoint) => (
-                    <Marker
-                      key={chargePoint.id}
-                      coordinates={[
-                        chargePoint.longitude,
-                        chargePoint.latitude,
-                      ]}
-                      onClick={() => showChargePointInformation(chargePoint)}
-                      anchor="top"
-                    >
-                      <div
-                        className="marker"
-                        style={{
-                          backgroundColor: mappingColors(
-                            chargePoint.waiting_time
-                          ),
-                        }}
-                      ></div>
-                    </Marker>
-                  ))}
-              </Cluster>
-            ) : (
-              chargePoints &&
-              chargePoints.map((chargePoint) => (
-                <Marker
-                  key={chargePoint.id}
-                  coordinates={[chargePoint.longitude, chargePoint.latitude]}
-                  onClick={() => showChargePointInformation(chargePoint)}
-                  anchor="top"
-                >
-                  <div
-                    className="marker"
-                    style={{
-                      backgroundColor: mappingColors(chargePoint.waiting_time),
-                    }}
-                  ></div>
-                </Marker>
-              ))
-            )}
-          </Map>
-          <div className="buttons-div">
-            <Button text="Planificar Ruta" />
-            <Button text="Filtrado" toggleFilter={toggleFilter} />
-            {filterPanel && (
-              <FilterPanel
-                setFilterPanel={setFilterPanel}
-                lat={lat}
-                lng={lng}
-                setChargePoints={setChargePoints}
-              />
-            )}
-          </div>
-
-          {informationVisible && (
-            <ChargePointInformation
-              className="chargePointInformation"
-              singleChargePoint={singleChargePoint}
-              hideChargePointInformation={hideChargePointInformation}
+            <NavigationControl
+              style={{
+                left: 10,
+                bottom: 10,
+              }}
             />
-          )}
-        </>
+            <GeolocateControl
+              style={{
+                right: 10,
+                bottom: 10,
+              }}
+              positionOptions={{ enableHighAccuracy: true }}
+              trackUserLocation={true}
+              auto
+            />
+            <Source
+              id="charge-points"
+              type="geojson"
+              data={data}
+              cluster={true}
+              clusterMaxZoom={14}
+              clusterRadius={50}
+            >
+              <Layer {...clusterLayer} />
+              <Layer {...clusterCountLayer} />
+              <Layer {...unclusteredPointLayer} />
+            </Source>
+          </ReactMapGL>
+          <div className="map__options">
+            <div className="map__options__button">
+              <img src={search} alt="search" />
+            </div>
+            <div className="map__options__button" onClick={toggleFilter}>
+              <img src={filterOptions} alt="filter" />
+            </div>
+          </div>
+        </div>
+      )}
+      {viewFilterPanel && (
+        <FilterPanel
+          setFilterPanel={setViewFilterPanel}
+          lat={userLat}
+          lng={userLng}
+          setChargePoints={setChargePoints}
+          className="map__"
+        />
       )}
     </>
   );
 };
 
-export default MapWrapper;
+export default Map;
