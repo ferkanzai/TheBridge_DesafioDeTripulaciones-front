@@ -5,7 +5,7 @@
     background-color: white;
     bottom: 56px;
     height: 50.7%;
-    position: fixed;
+    position: absolute;
     width: 100%;
 
     &__top {
@@ -42,5 +42,49 @@
     &__info {
       padding: 0 1rem;
     }
+
+    &__buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1.5rem;
+
+      & button {
+        margin: 0.5rem 1rem;
+        padding: 1rem 3rem;
+      }
+
+      &__cancel {
+        @include grey-button;
+      }
+
+      &__reserve {
+        @include blue-green-button;
+      }
+    }
+  }
+}
+
+@media (max-width: 350px) {
+  .map {
+    height: 70.7%;
+
+    &__chargePointInformation {
+      padding-bottom: 1rem;
+      overflow-y: scroll;
+
+      &__top {
+        margin-top: -35px;
+      }
+
+      &__buttons {
+        & button {
+          padding: 0.5rem 1rem;
+        }
+      }
+    }
+  }
+  .container {
+    z-index: 2;
   }
 }

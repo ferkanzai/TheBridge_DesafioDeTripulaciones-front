@@ -38,8 +38,17 @@ const ChargePointInformation = ({
         <ChargePointFullInfo chargePoint={chargePoint} />
       </div>
       <div className={`${className}chargePointInformation__buttons`}>
-        <button onClick={hideChargePointInformation}>Cancelar</button>
-        <button>Reservar</button>
+        <button
+          onClick={hideChargePointInformation}
+          className={`${className}chargePointInformation__buttons__cancel`}
+        >
+          Cancelar
+        </button>
+        <button
+          className={`${className}chargePointInformation__buttons__reserve`}
+        >
+          Reservar
+        </button>
       </div>
     </div>
   );
