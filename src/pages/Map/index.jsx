@@ -5,7 +5,7 @@ import ReactMapGL, {
   GeolocateControl,
   NavigationControl,
 } from "react-map-gl";
-import mapboxgl from "mapbox-gl/dist/mapbox-gl";
+import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
 import MapboxWorker from "mapbox-gl/dist/mapbox-gl-csp-worker";
 
 import ChargePointLegend from "../../components/ChargePointLegend";
@@ -24,10 +24,6 @@ import filterOptions from "../../svg/filter-options.svg";
 
 import "./index.scss";
 import "mapbox-gl/dist/mapbox-gl.css";
-import "mapbox-gl/dist/svg/mapboxgl-ctrl-compass.svg";
-import "mapbox-gl/dist/svg/mapboxgl-ctrl-geolocate.svg";
-import "mapbox-gl/dist/svg/mapboxgl-ctrl-zoom-in.svg";
-import "mapbox-gl/dist/svg/mapboxgl-ctrl-zoom-out.svg";
 
 mapboxgl.workerClass = MapboxWorker;
 const { REACT_APP_MAPBOX_ACCESS_TOKEN } = process.env;
