@@ -9,17 +9,17 @@
     font-size: 0.875rem;
   }
 
-  &__name {
-    margin-bottom: 0;
-    font-weight: bold;
-    font-size: 1.25rem;
-    white-space: nowrap;
-    overflow-x: scroll;
-  }
+  &__title {
+    &__name {
+      margin-bottom: 0;
+      font-weight: bold;
+      font-size: 1.25rem;
+    }
 
-  &__rates {
-    margin-bottom: 1rem;
-    display: flex;
+    &__rates {
+      margin-bottom: 1rem;
+      display: flex;
+    }
   }
 
   &__data {
