@@ -22,3 +22,20 @@
     right: 0;
   }
 }
+
+@media (max-width: 350px) {
+  .container {
+    width: 80px;
+    height: 80px;
+
+    &__svg {
+      width: 65px;
+      height: 65px;
+    }
+
+    &__heart {
+      bottom: -0.5rem;
+      right: -0.5rem;
+    }
+  }
+}
