@@ -4,10 +4,12 @@ import ReactMapGL, {
   Layer,
   GeolocateControl,
   NavigationControl,
+  FlyToInterpolator,
 } from "react-map-gl";
 import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
 import MapboxWorker from "mapbox-gl/dist/mapbox-gl-csp-worker";
 
+import ChargePointInformation from "../../components/ChargePointInformation";
 import ChargePointLegend from "../../components/ChargePointLegend";
 import FilterPanel from "../../components/FilterPanel";
 
@@ -35,6 +37,8 @@ const Map = () => {
   const [chargePoints, setChargePoints] = useState([]);
   const [viewLegend, setViewLegend] = useState(true);
   const [viewFilterPanel, setViewFilterPanel] = useState(false);
+  const [viewChargePointInfo, setViewChargePointInfo] = useState(false);
+  const [singleChargePoint, setSingleChargePoint] = useState(null);
   const [viewport, setViewport] = useState({
     latitude: userLat || 40,
     longitude: userLng || -3,
@@ -71,7 +75,8 @@ const Map = () => {
   const mapRef = useRef(null);
 
   const showChargePointInformation = (chargePoint) => {
-    console.log(chargePoint.id);
+    setSingleChargePoint(chargePoint);
+    setViewChargePointInfo(true);
   };
 
   const onClick = (event) => {
@@ -99,9 +104,16 @@ const Map = () => {
       }
       if (feature.layer.id === "unclustered-point") {
         showChargePointInformation(feature.properties);
+        setViewport({
+          ...viewport,
+          longitude: feature.geometry.coordinates[0],
+          latitude: feature.geometry.coordinates[1] - 0.0015,
+          zoom: 15,
+          transitionDuration: 200,
+        });
       }
     } else {
-      console.log("click");
+      setViewChargePointInfo(false);
     }
   };
 
@@ -118,8 +130,14 @@ const Map = () => {
   };
 
   const hideLegend = () => setViewLegend(false);
+
   const toggleFilter = () => {
     setViewFilterPanel(true);
+  };
+
+  const hideChargePointInformation = () => {
+    setViewChargePointInfo(false);
+    setSingleChargePoint(null);
   };
 
   return (
@@ -129,6 +147,8 @@ const Map = () => {
       ) : (
         <div className="map">
           <ReactMapGL
+            transitionInterpolator={new FlyToInterpolator()}
+            transitionDuration={5}
             width="100vw"
             height="calc(100vh - 56px)"
             className="map__view"
@@ -186,6 +206,13 @@ const Map = () => {
           lng={userLng}
           setChargePoints={setChargePoints}
           className="map__"
+        />
+      )}
+      {viewChargePointInfo && (
+        <ChargePointInformation
+          chargePoint={singleChargePoint}
+          className="map__"
+          hideChargePointInformation={hideChargePointInformation}
         />
       )}
     </>
