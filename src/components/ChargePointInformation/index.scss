@@ -65,7 +65,7 @@
   }
 }
 
-@media (max-width: 350px) {
+@media (max-width: 365px) {
   .map {
     height: 70.7%;
 
@@ -74,7 +74,7 @@
       overflow-y: scroll;
 
       &__top {
-        margin-top: -35px;
+        margin-top: 0.8rem;
       }
 
       &__buttons {
