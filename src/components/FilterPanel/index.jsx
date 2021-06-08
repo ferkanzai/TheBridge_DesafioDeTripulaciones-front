@@ -36,9 +36,7 @@ const FilterPanel = ({
   }, [token]);
 
   const handleFormSubmit = (v) => {
-    console.log(v);
     const carIds = v.cars && (v.cars === "all" ? userCarIds : userPrimaryCarId);
-    console.log(carIds);
 
     if (carIds) {
       getFilteredAndCompatibleChargePoints(

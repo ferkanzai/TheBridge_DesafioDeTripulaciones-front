@@ -21,12 +21,6 @@ export const getFilteredChargePoints = async (
     `${API_URL}/charge-points/filter?rating=${rating}&distance=${distance}&latitude=${lat}&longitude=${lng}&connections=${connections}&operators=${operators}`
   );
 
-  console.log(
-    `${API_URL}/charge-points/filter?rating=${rating}&distance=${distance}&latitude=${lat}&longitude=${lng}&connections=${connections}&operators=${operators}`
-  );
-
-  console.log(response);
-
   return response.data.data;
 };
 
@@ -51,12 +45,6 @@ export const getFilteredAndCompatibleChargePoints = async (
     `${API_URL}/charge-points/filter-and-compatible?rating=${rating}&distance=${distance}&latitude=${lat}&longitude=${lng}&connections=${connections}&operators=${operators}&carIds=${carIds}`,
     config
   );
-
-  console.log(
-    `${API_URL}/charge-points/filter?rating=${rating}&distance=${distance}&latitude=${lat}&longitude=${lng}&connections=${connections}&operators=${operators}&carIds=${carIds}`
-  );
-
-  console.log(response);
 
   return response.data.data;
 };
