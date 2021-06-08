@@ -1,0 +1,48 @@
+.cpFullInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+
+  &__name {
+    margin-bottom: 0;
+    font-weight: bold;
+    font-size: 1.25rem;
+    white-space: nowrap;
+    overflow-x: scroll;
+  }
+
+  &__rates {
+    margin-bottom: 1rem;
+    display: flex;
+  }
+
+  &__data {
+    display: flex;
+    flex-direction: column;
+
+    &__line {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+
+      &__text {
+        margin: 0.5rem 0;
+      }
+
+      & img {
+        width: 16px;
+        height: 16px;
+        margin-right: 1rem;
+      }
+
+      &__circle {
+        margin-right: 1rem;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 1px solid #020828;
+      }
+    }
+  }
+}
