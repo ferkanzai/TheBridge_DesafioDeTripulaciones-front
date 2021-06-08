@@ -4,6 +4,11 @@
   align-items: flex-start;
   justify-content: flex-start;
 
+  &__grey {
+    color: #958f8f;
+    font-size: 0.875rem;
+  }
+
   &__name {
     margin-bottom: 0;
     font-weight: bold;

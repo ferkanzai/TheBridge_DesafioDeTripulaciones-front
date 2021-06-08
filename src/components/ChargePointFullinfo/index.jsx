@@ -13,7 +13,7 @@ const ChargePointFullInfo = ({ chargePoint }) => {
       <p className="cpFullInfo__name">{chargePoint.name}</p>
       <div className="cpFullInfo__rates">
         <Rating value={chargePoint.rating || 0} size="small" />
-        <span>({chargePoint.votes})</span>
+        <span className="cpFullInfo__grey">({chargePoint.votes})</span>
       </div>
       <div className="cpFullInfo__data">
         <div className="cpFullInfo__data__line">
@@ -47,7 +47,7 @@ const ChargePointFullInfo = ({ chargePoint }) => {
           <img src={dollar} alt="dollar icon" />
           <p className="cpFullInfo__data__line__text">
             Última revisión técnica{" "}
-            <span>
+            <span className="cpFullInfo__grey">
               {chargePoint.last_verified !== "null"
                 ? chargePoint.last_verified
                 : "No disponible"}
