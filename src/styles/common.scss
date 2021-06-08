@@ -4,6 +4,7 @@ $primary: #2e3454;
 $lightPrimary: #68719f;
 $stars: #dfba4b;
 $secondaryAccent: #50b7af;
+$grey: #f2f2f2;
 
 @mixin flex-center {
   display: flex;
@@ -33,6 +34,11 @@ $secondaryAccent: #50b7af;
   background-color: #e0e0e0;
   color: $secondaryAccent;
   border: 1px solid $secondaryAccent;
+}
+
+@mixin simple-button {
+  @extend .buttons;
+  color: $secondaryAccent;
 }
 
 @mixin grey-button {
