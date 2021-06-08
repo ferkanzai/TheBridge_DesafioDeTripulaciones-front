@@ -8,20 +8,21 @@ import redHeart from "../../svg/red-heart.svg";
 
 import "./index.scss";
 
-const StationIcon = ({ isFavorite }) => {
+const StationIcon = ({ isFavorite, handleHeartClick }) => {
   const { user } = useContext(UserContext);
   return (
     <div className="container">
       <img
-        src={chargePoint}
-        className="container__svg"
         alt="icon of a charge point"
+        className="container__svg"
+        src={chargePoint}
       />
       {user && (
         <img
-          className="container__heart"
-          src={isFavorite ? redHeart : heart}
           alt="favorite icon"
+          className="container__heart"
+          onClick={handleHeartClick}
+          src={isFavorite ? redHeart : heart}
         />
       )}
     </div>

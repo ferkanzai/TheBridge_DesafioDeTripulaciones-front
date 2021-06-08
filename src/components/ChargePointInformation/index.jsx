@@ -3,7 +3,11 @@ import StationIcon from "../StationIcon";
 
 import { UserContext } from "../../store";
 
-import { getIsFavorite } from "../../services/favorites";
+import {
+  deleteRemoveFavorite,
+  getIsFavorite,
+  postAddFavorite,
+} from "../../services/favorites";
 
 import { chooseSrc } from "../../utils";
 
@@ -15,20 +19,43 @@ const ChargePointInformation = ({
   className,
   hideChargePointInformation,
 }) => {
-  const { token } = useContext(UserContext);
+  const { token, userFavorites, setUserFavorites } = useContext(UserContext);
   const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
     getIsFavorite(token, chargePoint.id).then((res) => {
-      console.log(res);
-      res.length && setIsFavorite(true);
+      setIsFavorite(false);
+      if (res.length && chargePoint.id === res[0].id) setIsFavorite(true);
     });
-  }, [token, chargePoint.id]);
+  }, [token, chargePoint]);
+
+  const handleHeartClick = () => {
+    getIsFavorite(token, chargePoint.id).then((res) => {
+      if (res.length === 0) {
+        postAddFavorite(token, chargePoint.id).then(() => {
+          setUserFavorites((prevFavs) => [...prevFavs, chargePoint]);
+          setIsFavorite(true);
+        });
+      } else {
+        const favoriteId = res[0].fav_id;
+
+        deleteRemoveFavorite(token, favoriteId).then(() => {
+          setUserFavorites(
+            userFavorites.filter((fav) => fav.id !== chargePoint.id)
+          );
+          setIsFavorite(false);
+        });
+      }
+    });
+  };
 
   return (
     <div className={`${className}chargePointInformation`}>
       <div className={`${className}chargePointInformation__top`}>
-        <StationIcon isFavorite={isFavorite} />
+        <StationIcon
+          isFavorite={isFavorite}
+          handleHeartClick={handleHeartClick}
+        />
         <div className={`${className}chargePointInformation__top__operator`}>
           <span>{chargePoint.operator}</span>
           <img src={chooseSrc[chargePoint.operator]} alt="" />
