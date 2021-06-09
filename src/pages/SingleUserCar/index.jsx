@@ -55,7 +55,7 @@ const SingleUserCar = () => {
     if (!is_primary_car) {
       deleteRemoveUserCar(token, user_car_id)
         .then(() => {
-          history.push("/profile");
+          history.push("/add-car");
         })
         .catch((err) => (err.code === 401 ? history.push("/profile") : null));
     } else {
