@@ -17,6 +17,12 @@ const Start = () => {
       <span className="start__title">
         Bienvenido {fullUser && fullUser.name},
       </span>
+      <span className="start__textImportant">
+        Añade tu vehículo para ver los puntos de carga compatibles
+      </span>
+      <Link to="/add-car" className="start__buttonImportant">
+        Añadir
+      </Link>
       <span className="start__text">
         Reserva puntos de carga y viaja con total seguridad
       </span>

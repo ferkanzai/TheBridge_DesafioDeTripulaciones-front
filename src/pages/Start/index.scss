@@ -1,36 +1,49 @@
 @import "../../styles/common.scss";
 
 .start {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
   background-image: url("../../start.jpg");
   background-position: center;
-  background-size: cover;
   background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
   height: 100vh;
+  justify-content: flex-start;
+  align-items: flex-start;
   padding: 1rem;
 
   &__title {
-    margin-bottom: 0.5rem;
-    margin-top: 5rem;
+    color: #2e3454;
     font-size: 1.75rem;
     font-weight: 300;
-    color: #2e3454;
+    margin-bottom: 0.5rem;
+    margin-top: 5rem;
+  }
+
+  &__textImportant {
+    font-weight: 500;
+    margin: 1rem 0 0.5rem 0;
+    width: 12rem;
+  }
+
+  &__buttonImportant {
+    @include blue-green-button;
+    margin: 0.5rem 0 1rem 0;
+    padding: 0.87rem 2.5rem;
+    width: 90px;
   }
 
   &__text {
-    margin: 0.5rem 0 1rem 0;
-    width: 12rem;
+    font-size: 0.875rem;
     font-weight: 500;
+    margin: 0.5rem 0;
+    width: 12rem;
   }
 
   &__button {
-    @include blue-button;
-    width: 90px;
-    padding: 0.87rem 2.5rem;
+    @include no-button;
     margin-left: 0;
-    margin-top: 1rem;
+    padding: 0;
   }
 
   a {
