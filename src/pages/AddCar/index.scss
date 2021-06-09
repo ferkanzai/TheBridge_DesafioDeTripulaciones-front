@@ -1,0 +1,34 @@
+@import "../../styles/common.scss";
+
+.addCar {
+  background-color: $primary;
+  height: 100vh;
+  width: 100vw;
+
+  &__total {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+
+    &__top {
+      padding: 2rem 0.5rem;
+
+      &__text {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem;
+
+        &__title {
+          color: $accentColor;
+          font-size: 1.25rem;
+          max-width: 15.625rem;
+        }
+      }
+    }
+
+    &__userCars {
+      overflow-x: scroll;
+    }
+  }
+}
