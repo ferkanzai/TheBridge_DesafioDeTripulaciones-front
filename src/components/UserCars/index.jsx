@@ -71,7 +71,11 @@ const UserCars = ({ car, carToAdd }) => {
             </Link>
           ))
         ) : (
-          <span className="userCars__noCars">"No tienes coches añadidos"</span>
+          <div className="userCars__noCars">
+            <span className="userCars__noCars__text">
+              No tienes coches añadidos
+            </span>
+          </div>
         )}
       </div>
     </div>
