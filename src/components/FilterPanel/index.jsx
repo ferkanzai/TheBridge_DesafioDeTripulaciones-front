@@ -3,12 +3,17 @@ import { FormProvider, useForm } from "react-hook-form";
 import Rating from "@material-ui/lab/Rating";
 
 import OperatorsMenu from "../OperatorsMenu";
+
 import {
   getFilteredAndCompatibleChargePoints,
   getFilteredChargePoints,
 } from "../../services/charge-points";
-import { UserContext } from "../../store";
 import { getUserCars } from "../../services/users";
+
+import { UserContext } from "../../store";
+
+import "./index.scss";
+import { withStyles } from "@material-ui/core";
 
 const FilterPanel = ({
   setFilterPanel,
@@ -81,6 +86,12 @@ const FilterPanel = ({
     methods.reset();
   };
 
+  const StyledRating = withStyles({
+    root: {
+      color: "#50B7AF",
+    },
+  })(Rating);
+
   return (
     <div className={`${className}filter-panel`}>
       <h2>Filtrado</h2>
@@ -105,7 +116,10 @@ const FilterPanel = ({
             <p>Compañías operadoras</p>
             <OperatorsMenu />
             <p>Puntuación</p>
-            <Rating
+            <StyledRating
+              classes={{
+                iconFilled: "#50B7AF",
+              }}
               {...methods.register("rating")}
               name="rating"
               defaultValue={0}
