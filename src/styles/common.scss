@@ -65,6 +65,11 @@ $grey6: #f2f2f2;
   border: 1px solid $accentColor;
 }
 
+@mixin no-button {
+  @include simple-button;
+  background-color: transparent;
+}
+
 @mixin inputs {
   border: none;
   border-bottom: 1px solid #bdbdbd;
