@@ -12,6 +12,7 @@ export function useUser() {
   const [status, setStatus] = useState(0);
   const [userContextLat, setUserContextLat] = useState(null);
   const [userContextLng, setUserContextLng] = useState(null);
+  const [showNoMore, setShowNoMore] = useState(false);
   const history = useHistory();
 
   const token = localStorage.getItem("access_token");
@@ -76,5 +77,7 @@ export function useUser() {
     setActiveReservation,
     userContextLat,
     userContextLng,
+    showNoMore,
+    setShowNoMore,
   };
 }

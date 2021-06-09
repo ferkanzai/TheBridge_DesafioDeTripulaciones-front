@@ -1,11 +1,17 @@
+import { useContext } from "react";
+
 import SingleChargePoint from "../SingleChargePoint";
+
+import { UserContext } from "../../store";
 
 import arrow from "../../svg/arrow.svg";
 import chargePoint from "../../svg/charge-point.svg";
 
 import "./index.scss";
 
-const ChargePointLegend = ({ quitLegend }) => {
+const ChargePointLegend = ({ quitLegend, showLegendNoMore }) => {
+  const { showNoMore } = useContext(UserContext);
+
   return (
     <div className="chargePointLegend">
       <h2 className="chargePointLegend__title">
@@ -53,6 +59,14 @@ const ChargePointLegend = ({ quitLegend }) => {
         onClick={quitLegend}
         className="chargePointLegend__close"
       />
+      {!showNoMore && (
+        <span
+          className="chargePointLegend__hideNoMore"
+          onClick={showLegendNoMore}
+        >
+          No volver a mostrar
+        </span>
+      )}
     </div>
   );
 };

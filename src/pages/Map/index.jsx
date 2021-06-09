@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import ReactMapGL, {
   Source,
   Layer,
@@ -14,6 +14,8 @@ import ChargePointLegend from "../../components/ChargePointLegend";
 import ChargePointReservationPage from "../../components/ChargePointReservationPage";
 import FilterPanel from "../../components/FilterPanel";
 
+import { UserContext } from "../../store";
+
 import { getChargePoints } from "../../services/charge-points";
 
 import {
@@ -24,6 +26,7 @@ import {
 
 import search from "../../svg/search.svg";
 import filterOptions from "../../svg/filter-options.svg";
+import info from "../../svg/info-black.svg";
 
 import "./index.scss";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -32,6 +35,7 @@ mapboxgl.workerClass = MapboxWorker;
 const { REACT_APP_MAPBOX_ACCESS_TOKEN } = process.env;
 
 const Map = () => {
+  const { showNoMore, setShowNoMore } = useContext(UserContext);
   const [status, setStatus] = useState(0);
   const [userLat, setUserLat] = useState(null);
   const [userLng, setUserLng] = useState(null);
@@ -41,6 +45,7 @@ const Map = () => {
   const [viewChargePointInfo, setViewChargePointInfo] = useState(false);
   const [singleChargePoint, setSingleChargePoint] = useState(null);
   const [viewReservationPage, setViewReservationPage] = useState(false);
+  const [showLegendTemp, setShowLegendTemp] = useState(false);
   const [viewport, setViewport] = useState({
     latitude: userLat || 40,
     longitude: userLng || -3,
@@ -148,10 +153,23 @@ const Map = () => {
     setViewChargePointInfo(!viewChargePointInfo);
   };
 
+  const showLegendNoMore = () => {
+    setShowNoMore(true);
+    setViewLegend(false);
+  };
+
+  const toggleLegendTemp = () => {
+    setViewLegend(true);
+    setShowLegendTemp(true);
+  };
+
   return (
     <>
-      {viewLegend ? (
-        <ChargePointLegend quitLegend={hideLegend} />
+      {viewLegend && (!showNoMore || showLegendTemp) ? (
+        <ChargePointLegend
+          quitLegend={hideLegend}
+          showLegendNoMore={showLegendNoMore}
+        />
       ) : (
         <div className="map">
           <ReactMapGL
@@ -198,6 +216,9 @@ const Map = () => {
             </Source>
           </ReactMapGL>
           <div className="map__options">
+            <div className="map__options__button">
+              <img src={info} alt="info" onClick={toggleLegendTemp} />
+            </div>
             <div className="map__options__button">
               <img src={search} alt="search" />
             </div>
