@@ -4,11 +4,11 @@ import Skeleton from "react-loading-skeleton";
 
 import { getUserCars } from "../../services/users";
 
+import { UserContext } from "../../store";
+
 import carImg from "../../car.png";
-import gear from "../../svg/gear.svg";
 
 import "./index.scss";
-import { UserContext } from "../../store";
 
 const UserCars = ({ car, carToAdd }) => {
   let { token } = useContext(UserContext);
@@ -29,13 +29,20 @@ const UserCars = ({ car, carToAdd }) => {
 
   return (
     <div className="userCars">
-      <h3>Estos son tus coches actuales</h3>
+      {userCars.length === 1 ? (
+        <span className="userCars__title">Este es tu vehículo actual</span>
+      ) : (
+        <span className="userCars__title">
+          Estos son tus vehículos actuales
+        </span>
+      )}
       <div className="userCars__cars">
         {loadingCars ? (
           <Skeleton width={350} height={162} />
         ) : userCars.length ? (
           userCars.map((car) => (
-            <div
+            <Link
+              to={`/settings/${car.user_car_id}`}
               key={car.user_car_id}
               className={
                 car.is_primary_car
@@ -48,19 +55,23 @@ const UserCars = ({ car, carToAdd }) => {
                 alt={`${car.name} - ${car.model}`}
                 className="userCars__cars__car__image"
               />
-              <p className="userCars__cars__car__alias">
-                {car.alias || `${car.name} - ${car.model}`}
-              </p>
-              <Link
-                to={`/settings/${car.user_car_id}`}
-                className="userCars__cars__car__settings"
-              >
-                <img src={gear} alt="setting" />
-              </Link>
-            </div>
+              <div className="userCars__cars__car__data">
+                <span className="userCars__cars__car__data__name">
+                  {car.name}
+                </span>
+                <span className="userCars__cars__car__data__name">
+                  {car.model}
+                </span>
+                <span className="userCars__cars__car__data__alias">
+                  {car.is_primary_car && !car.alias
+                    ? "Vehículo principal"
+                    : car.alias}
+                </span>
+              </div>
+            </Link>
           ))
         ) : (
-          "No tienes coches añadidos"
+          <span className="userCars__noCars">"No tienes coches añadidos"</span>
         )}
       </div>
     </div>
