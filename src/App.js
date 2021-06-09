@@ -70,9 +70,7 @@ function App() {
 
           <Route path="/add-car">
             <WithAuthentication>
-              <WithNavBar>
-                <AddCar />
-              </WithNavBar>
+              <AddCar />
             </WithAuthentication>
           </Route>
 
