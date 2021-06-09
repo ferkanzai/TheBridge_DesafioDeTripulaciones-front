@@ -43,6 +43,11 @@ export function useUser() {
 
   const logout = () => {
     setUser(null);
+    setUserFavorites([]);
+    setActiveReservation(null);
+    setUserContextLat(null);
+    setUserContextLng(null);
+    setShowNoMore(null);
     localStorage.removeItem("access_token");
   };
 
