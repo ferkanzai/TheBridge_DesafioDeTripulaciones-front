@@ -9,6 +9,9 @@ export function useUser() {
   const [userFavorites, setUserFavorites] = useState([]);
   const [activeReservation, setActiveReservation] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
+  const [status, setStatus] = useState(0);
+  const [userContextLat, setUserContextLat] = useState(null);
+  const [userContextLng, setUserContextLng] = useState(null);
   const history = useHistory();
 
   const token = localStorage.getItem("access_token");
@@ -42,6 +45,24 @@ export function useUser() {
     localStorage.removeItem("access_token");
   };
 
+  useEffect(() => {
+    if (!navigator.geolocation) {
+    } else {
+      if (status < 10) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            setStatus(11);
+            setUserContextLat(position.coords.latitude);
+            setUserContextLng(position.coords.longitude);
+          },
+          () => {
+            setStatus(status + 1);
+          }
+        );
+      }
+    }
+  }, [status]);
+
   return {
     user,
     loadingUser,
@@ -53,5 +74,7 @@ export function useUser() {
     setUserFavorites,
     activeReservation,
     setActiveReservation,
+    userContextLat,
+    userContextLng,
   };
 }

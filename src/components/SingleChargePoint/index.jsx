@@ -1,20 +1,25 @@
 import out from "../../svg/out-of-service.svg";
-import chargePoint from "../../svg/charge-point.svg";
 
 import "./index.scss";
 
-const SingleChargePoint = ({ text, color }) => {
+const SingleChargePoint = ({ icon, text, color, size, circleSize }) => {
   return (
     <div className="singleChargePoint">
       <div className="singleChargePoint__icon">
-        <img src={chargePoint} alt="" width={64} height={64} />
+        <img src={icon} alt="" width={size} height={size} />
         {color === "out-of-service" ? (
           <img src={out} alt="" className="singleChargePoint__icon__out" />
         ) : (
           <div
             className="singleChargePoint__icon__circle"
             style={
-              color !== "out-of-service" ? { backgroundColor: color } : null
+              color !== "out-of-service"
+                ? {
+                    backgroundColor: color,
+                    width: circleSize,
+                    height: circleSize,
+                  }
+                : null
             }
           ></div>
         )}

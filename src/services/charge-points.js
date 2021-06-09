@@ -9,6 +9,14 @@ export const getChargePoints = async (lat, lng) => {
   return response.data.data;
 };
 
+export const getSingleChargePoint = async (chargePointId, lat, lng) => {
+  const response = await axios.get(
+    `${API_URL}/charge-points/single/${chargePointId}?latitude=${lat}&longitude=${lng}`
+  );
+
+  return response.data.data;
+};
+
 export const getFilteredChargePoints = async (
   lat,
   lng,
