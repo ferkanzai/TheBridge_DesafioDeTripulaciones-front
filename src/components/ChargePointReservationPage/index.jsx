@@ -37,7 +37,7 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
   const [isActiveReservation, setIsActiveReservation] = useState(false);
   const [loadingActiveReservation, setLoadingActiveReservation] =
     useState(true);
-  const [connectionId, setConnectionId] = useState([]);
+  const [connectionId, setConnectionId] = useState(null);
   const [reservationEndTime, setReservationEndTime] = useState(null);
   const [time, setTime] = useState(dayjs(Date.now()));
   const [popupActiveReservation, setPopupActiveReservation] = useState(false);
@@ -113,31 +113,36 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
   useEffect(() => {
     const token = localStorage.getItem("access_token");
 
-    getActiveReservation(token)
-      .then((res) => {
-        if (res.length) {
-          setActiveReservation(res[0]);
-          setIsActiveReservation(true);
-          setReservationEndTime(
-            dayjs(res[0].expiration_date + 2 * 1000 * 60 * 60)
-          );
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        setIsActiveReservation(false);
-        setActiveReservation(null);
-      })
-      .finally(() => {
-        setLoadingActiveReservation(false);
-        if (activeReservation) {
-          setReservationEndTime(
-            dayjs(activeReservation.expiration_date + 2 * 1000 * 60 * 60)
-          );
-        }
-      });
+    getConenctionsByChargePoint(chargePoint.id).then((res) => {
+      const cId = res[0].id;
+      setConnectionId(res[0].id);
+
+      getActiveReservation(token)
+        .then((res) => {
+          if (res.length && res[0].connection_id === cId) {
+            setActiveReservation(res[0]);
+            setIsActiveReservation(true);
+            setReservationEndTime(
+              dayjs(res[0].expiration_date + 2 * 1000 * 60 * 60)
+            );
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          setIsActiveReservation(false);
+          setActiveReservation(null);
+        })
+        .finally(() => {
+          setLoadingActiveReservation(false);
+          if (activeReservation) {
+            setReservationEndTime(
+              dayjs(activeReservation.expiration_date + 2 * 1000 * 60 * 60)
+            );
+          }
+        });
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [chargePoint]);
 
   const getMin = () => {
     const diffInMins = reservationEndTime.diff(time, "minutes");

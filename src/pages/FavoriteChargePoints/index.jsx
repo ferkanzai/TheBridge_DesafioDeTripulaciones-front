@@ -1,10 +1,12 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 
 import BackArrow from "../../components/BackArrow";
+import ChargePointReservationPage from "../../components/ChargePointReservationPage";
 
 import { UserContext } from "../../store";
 
+import { getSingleChargePoint } from "../../services/charge-points";
 import {
   deleteRemoveFavorite,
   getFavoritesChargePoints,
@@ -12,12 +14,16 @@ import {
 
 import exit from "../../svg/exit.svg";
 import redHeart from "../../svg/red-heart.svg";
-import chargePoint from "../../svg/charge-point.svg";
+import chargePoint5 from "../../svg/charge-point.svg";
 
 import "./index.scss";
 
 const FavoritesChargePoints = () => {
-  const { userFavorites, setUserFavorites } = useContext(UserContext);
+  const { userFavorites, setUserFavorites, userContextLat, userContextLng } =
+    useContext(UserContext);
+
+  const [isReservationPage, setIsReservationPage] = useState(false);
+  const [chargePoint, setChargePoint] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
@@ -35,15 +41,25 @@ const FavoritesChargePoints = () => {
     );
   };
 
+  const handleReservationPage = (chargePointId) => {
+    getSingleChargePoint(chargePointId, userContextLat, userContextLng)
+      .then((res) => setChargePoint(res[0]))
+      .finally(() => setIsReservationPage(true));
+  };
+
   return (
     <div className="favorites">
       <BackArrow goProfile={true} className="favorites__arrow" />
       {userFavorites.length ? (
         userFavorites.map((favorite) => {
           return (
-            <div key={favorite.id} className="favorite">
+            <div
+              key={favorite.id}
+              className="favorite"
+              onClick={() => handleReservationPage(favorite.id)}
+            >
               <div className="favorite__pic">
-                <img src={chargePoint} alt="" className="favorite__pic__svg" />
+                <img src={chargePoint5} alt="" className="favorite__pic__svg" />
                 <img src={redHeart} alt="" className="favorite__pic__heart" />
               </div>
               <div className="favorite__name">
@@ -62,6 +78,12 @@ const FavoritesChargePoints = () => {
         })
       ) : (
         <Skeleton width={300} />
+      )}
+      {isReservationPage && (
+        <ChargePointReservationPage
+          chargePoint={chargePoint}
+          setIsReservationPage={setIsReservationPage}
+        />
       )}
     </div>
   );
