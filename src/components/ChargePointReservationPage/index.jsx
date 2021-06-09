@@ -207,8 +207,11 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
         <div className="reservationPage__top__left">
           <p>Reserva actual</p>
           <div className="reservationPage__top__right__operator">
-            <span>{chargePoint.operator}</span>
-            <img src={chooseSrc[chargePoint.operator]} alt="" />
+            <span>{chargePoint.operator || chargePoint.operator_name}</span>
+            <img
+              src={chooseSrc[chargePoint.operator || chargePoint.operator_name]}
+              alt=""
+            />
           </div>
         </div>
         <div className="reservationPage__top__right">
