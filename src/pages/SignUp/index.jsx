@@ -15,7 +15,6 @@ const SignUp = () => {
   const [passwordShown, setPasswordShown] = useState(false);
 
   const handleFormSubmit = (formValues) => {
-    console.log("hey");
     signUp(formValues.email, formValues.password, formValues.name);
   };
 
@@ -26,7 +25,7 @@ const SignUp = () => {
   return (
     <>
       {user ? (
-        <Redirect to="/profile" />
+        <Redirect to="/start" />
       ) : (
         <div className="signup">
           <div className="signup__title">
