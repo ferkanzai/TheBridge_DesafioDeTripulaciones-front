@@ -1,3 +1,5 @@
+@import "../../styles/common.scss";
+
 .operator {
   & input[type="checkbox"] {
     display: none;
@@ -5,8 +7,9 @@
 
   &__label {
     align-items: center;
+    background-color: $grey6;
     border-radius: 22px;
-    border: 1px solid lightgrey;
+    border: 2px solid $grey6;
     display: flex;
     height: 30px;
     justify-content: space-around;
@@ -15,17 +18,19 @@
     &__circle-image {
       border-radius: 20px;
       height: 25px;
+      padding-left: 1.5px;
       width: 25px;
     }
 
     &__name {
-      padding: 0 10px;
       display: inline-block;
+      font-weight: 500;
+      padding: 0 10px;
       white-space: nowrap;
     }
   }
   :checked + label {
-    border: 1px solid hotpink;
+    border: 2px solid $primary;
   }
 }
 
@@ -38,23 +43,23 @@
   position: relative;
 }
 .rating span input {
-  position: absolute;
-  top: 0px;
   left: 0px;
   opacity: 0;
+  position: absolute;
+  top: 0px;
 }
 .rating span label {
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  text-align: center;
-  color: #fff;
-  background: #ccc;
-  font-size: 30px;
-  margin-right: 2px;
-  line-height: 30px;
-  border-radius: 50%;
   -webkit-border-radius: 50%;
+  background: #ccc;
+  border-radius: 50%;
+  color: #fff;
+  display: inline-block;
+  font-size: 30px;
+  height: 30px;
+  line-height: 30px;
+  margin-right: 2px;
+  text-align: center;
+  width: 30px;
 }
 .rating span:hover ~ span label,
 .rating span:hover label,

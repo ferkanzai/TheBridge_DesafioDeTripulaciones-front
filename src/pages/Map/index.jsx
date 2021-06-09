@@ -135,6 +135,7 @@ const Map = () => {
 
   const toggleFilter = () => {
     setViewFilterPanel(true);
+    if (viewChargePointInfo) setViewChargePointInfo(false);
   };
 
   const hideChargePointInformation = () => {

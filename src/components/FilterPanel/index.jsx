@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import Rating from "@material-ui/lab/Rating";
+import { withStyles } from "@material-ui/core";
 
 import OperatorsMenu from "../OperatorsMenu";
 
@@ -12,8 +13,9 @@ import { getUserCars } from "../../services/users";
 
 import { UserContext } from "../../store";
 
+import exit from "../../svg/exit.svg";
+
 import "./index.scss";
-import { withStyles } from "@material-ui/core";
 
 const FilterPanel = ({
   setFilterPanel,
@@ -54,7 +56,6 @@ const FilterPanel = ({
         v.operators,
         carIds
       ).then((res) => {
-        console.log(res);
         if (res.length === 0) {
           setMessage(true);
         } else {
@@ -71,7 +72,6 @@ const FilterPanel = ({
         v.connections,
         v.operators
       ).then((res) => {
-        console.log(res);
         if (res.length === 0) {
           setMessage(true);
         } else {
@@ -94,100 +94,144 @@ const FilterPanel = ({
 
   return (
     <div className={`${className}filter-panel`}>
-      <h2>Filtrado</h2>
+      <img
+        alt="exit button"
+        className={`${className}filter-panel__close`}
+        onClick={() => setFilterPanel(false)}
+        src={exit}
+      />
+      <p className={`${className}filter-panel__title`}>Filtrado</p>
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(handleFormSubmit)}
           className={`${className}filter-panel__options`}
         >
           <div className={`${className}filter-panel__options__selectors`}>
-            <p>Autonomía restante</p>
-            <span>0 km</span>
-            <input
-              className={`${className}filter-panel__options__selectors__distance`}
-              type="range"
-              min="0"
-              max="100"
-              name="distance"
-              id="distance"
-              {...methods.register("distance")}
-            />
-            <span>100 km</span>
-            <p>Compañías operadoras</p>
-            <OperatorsMenu />
-            <p>Puntuación</p>
+            <div
+              className={`${className}filter-panel__options__selectors__range`}
+            >
+              <p>Autonomía restante de mi vehículo</p>
+              <div
+                className={`${className}filter-panel__options__selectors__range__slider`}
+              >
+                <input
+                  className={`${className}filter-panel__options__selectors__range__slider__distance`}
+                  type="range"
+                  min="0"
+                  max="100"
+                  name="distance"
+                  id="distance"
+                  {...methods.register("distance")}
+                />
+                <div
+                  className={`${className}filter-panel__options__selectors__range__slider__labels`}
+                >
+                  <span>0 km</span>
+                  <span>100 km</span>
+                </div>
+              </div>
+            </div>
+            <p>Mejor puntuados por los usuarios</p>
             <StyledRating
-              classes={{
-                iconFilled: "#50B7AF",
-              }}
               {...methods.register("rating")}
               name="rating"
               defaultValue={0}
             />
-            <p>Número de cargadores en el punto</p>
-            <input
-              type="radio"
-              id="1"
-              name="connections"
-              value="1"
-              {...methods.register("connections")}
-            />
-            <label htmlFor="1">1 o mas</label>
-            <input
-              type="radio"
-              id="2"
-              name="connections"
-              value="2"
-              {...methods.register("connections")}
-            />
-            <label htmlFor="2">2 o mas</label>
-            <input
-              type="radio"
-              id="3"
-              name="connections"
-              value="3"
-              {...methods.register("connections")}
-            />
-            <label htmlFor="3">3 o mas</label>
+            <p>Compañías operadoras</p>
+            <OperatorsMenu />
+            <div
+              className={`${className}filter-panel__options__selectors__checkbox`}
+            >
+              <p>Nº de cargadores en el punto</p>
+              <div
+                className={`${className}filter-panel__options__selectors__checkbox__line`}
+              >
+                <input
+                  type="radio"
+                  id="1"
+                  name="connections"
+                  value="1"
+                  {...methods.register("connections")}
+                />
+                <label htmlFor="1">1+</label>
+              </div>
+              <div
+                className={`${className}filter-panel__options__selectors__checkbox__line`}
+              >
+                <input
+                  type="radio"
+                  id="2"
+                  name="connections"
+                  value="2"
+                  {...methods.register("connections")}
+                />
+                <label htmlFor="2">2+</label>
+              </div>
+              <div
+                className={`${className}filter-panel__options__selectors__checkbox__line`}
+              >
+                <input
+                  type="radio"
+                  id="3"
+                  name="connections"
+                  value="3"
+                  {...methods.register("connections")}
+                />
+                <label htmlFor="3">3+</label>
+              </div>
+            </div>
             {token && (
-              <>
-                <label htmlFor="primaryCar">
-                  Sólo compatibles con mi coche primario
-                </label>
-                <input
-                  type="radio"
-                  id="primaryCar"
-                  name="cars"
-                  value="primary"
-                  {...methods.register("cars")}
-                />
-                <label htmlFor="allCars">
-                  Compatibles con todos mis coches
-                </label>
-                <input
-                  type="radio"
-                  id="allCars"
-                  name="cars"
-                  value="all"
-                  {...methods.register("cars")}
-                />
-              </>
+              <div
+                className={`${className}filter-panel__options__selectors__checkbox`}
+              >
+                <div
+                  className={`${className}filter-panel__options__selectors__checkbox__line`}
+                >
+                  <input
+                    type="radio"
+                    id="primaryCar"
+                    name="cars"
+                    value="primary"
+                    {...methods.register("cars")}
+                  />
+                  <label htmlFor="primaryCar">
+                    Sólo compatibles con mi coche primario
+                  </label>
+                </div>
+                <div
+                  className={`${className}filter-panel__options__selectors__checkbox__line`}
+                >
+                  <input
+                    type="radio"
+                    id="allCars"
+                    name="cars"
+                    value="all"
+                    {...methods.register("cars")}
+                  />
+                  <label htmlFor="allCars">
+                    Compatibles con todos mis coches
+                  </label>
+                </div>
+              </div>
             )}
           </div>
           <div className={`${className}filter-panel__options__buttons`}>
-            <button type="submit">Filtrar</button>
-            <button type="reset" onClick={handleReset}>
-              Resetear
+            <button
+              type="reset"
+              className={`${className}filter-panel__options__buttons__reset`}
+              onClick={handleReset}
+            >
+              Limpiar
+            </button>
+            <button
+              type="submit"
+              className={`${className}filter-panel__options__buttons__filter`}
+            >
+              Aplicar
             </button>
           </div>
         </form>
       </FormProvider>
-      <button
-        className={`${className}filter-panel__close`}
-        onClick={() => setFilterPanel(false)}
-      >
-        x
-      </button>
       {message && (
         <div className="popup">
           <div className="popup__text">
