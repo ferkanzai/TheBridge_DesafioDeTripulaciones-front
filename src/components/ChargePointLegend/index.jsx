@@ -1,6 +1,6 @@
 import SingleChargePoint from "../SingleChargePoint";
 
-import close from "../../svg/close.svg";
+import arrow from "../../svg/arrow.svg";
 import chargePoint from "../../svg/charge-point.svg";
 
 import "./index.scss";
@@ -48,7 +48,7 @@ const ChargePointLegend = ({ quitLegend }) => {
         />
       </div>
       <img
-        src={close}
+        src={arrow}
         alt="close"
         onClick={quitLegend}
         className="chargePointLegend__close"
