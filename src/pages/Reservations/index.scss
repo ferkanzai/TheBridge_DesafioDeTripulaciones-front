@@ -4,11 +4,12 @@
   background-color: $primary;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   padding-bottom: 70px;
   padding-left: 1rem;
   padding-right: 1rem;
   padding-top: 2rem;
+  min-height: calc(100vh - 56px);
 
   hr {
     width: 100%;
