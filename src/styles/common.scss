@@ -55,7 +55,7 @@ $grey6: #f2f2f2;
 @mixin blue-green-button {
   @extend .buttons;
   background-color: $secondaryAccent;
-  color: #2e3454;
+  color: $primary;
 }
 
 @mixin grey-blue-button {
