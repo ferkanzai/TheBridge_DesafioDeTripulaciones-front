@@ -59,8 +59,11 @@ const ChargePointInformation = ({
             handleHeartClick={handleHeartClick}
           />
           <div className={`${className}chargePointInformation__top__operator`}>
-            <span>{chargePoint.operator}</span>
-            <img src={chooseSrc[chargePoint.operator]} alt="" />
+            <span>{chargePoint.operator_name || chargePoint.operator}</span>
+            <img
+              src={chooseSrc[chargePoint.operator_name || chargePoint.operator]}
+              alt=""
+            />
           </div>
         </div>
         <div className={`${className}chargePointInformation__info`}>
