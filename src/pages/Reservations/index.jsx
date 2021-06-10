@@ -93,10 +93,7 @@ const Reservations = () => {
               </p>
               <p className="reservations__current__text__date">
                 Fecha de la reserva:{" "}
-                {format(
-                  activeReservation.reservation_date + 2 * 60 * 60 * 1000,
-                  "dd-MM-yyyy HH:mm"
-                )}
+                {format(activeReservation.reservation_date, "dd-MM-yyyy HH:mm")}
               </p>
             </>
             <div
@@ -135,10 +132,7 @@ const Reservations = () => {
                 </p>
                 <p className="reservations__past__list__details__date">
                   Fecha de la reserva:{" "}
-                  {format(
-                    reservation.reservation_date + 2 * 60 * 60 * 1000,
-                    "dd-MM-yyyy HH:mm"
-                  )}
+                  {format(reservation.reservation_date, "dd-MM-yyyy HH:mm")}
                 </p>
               </div>
             </div>

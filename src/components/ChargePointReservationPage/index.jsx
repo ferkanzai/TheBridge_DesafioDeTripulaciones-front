@@ -96,9 +96,7 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
         })
         .finally(() => {
           if (isActiveReservation) {
-            setReservationEndTime(
-              dayjs(activeReservation.expiration_date + 2 * 1000 * 60 * 60)
-            );
+            setReservationEndTime(dayjs(activeReservation.expiration_date));
           }
         });
     }
@@ -120,9 +118,7 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
           if (res.length && res[0].connection_id === cId) {
             setActiveReservation(res[0]);
             setIsActiveReservation(true);
-            setReservationEndTime(
-              dayjs(res[0].expiration_date + 2 * 1000 * 60 * 60)
-            );
+            setReservationEndTime(dayjs(res[0].expiration_date));
           }
         })
         .catch((error) => {
@@ -133,9 +129,7 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
         .finally(() => {
           setLoadingActiveReservation(false);
           if (activeReservation) {
-            setReservationEndTime(
-              dayjs(activeReservation.expiration_date + 2 * 1000 * 60 * 60)
-            );
+            setReservationEndTime(dayjs(activeReservation.expiration_date));
           }
         });
     });
@@ -188,9 +182,7 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
         setMessage("RESERVA AMPLIADA 10 MINUTOS");
       })
       .finally(() => {
-        setReservationEndTime(
-          dayjs(activeReservation.expiration_date + 2 * 1000 * 60 * 60)
-        );
+        setReservationEndTime(dayjs(activeReservation.expiration_date));
       });
   };
 
