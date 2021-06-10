@@ -137,8 +137,12 @@ const SingleUserCar = () => {
           <div className="popup__text">
             <span>¿Estás seguro que quieres eliminar este coche?</span>
             <div className="popup__buttons">
-              <button onClick={removeCar}>Sí</button>
-              <button onClick={handleClickPopup}>No</button>
+              <button onClick={removeCar} className="popup__buttons__remove">
+                Eliminar
+              </button>
+              <button onClick={handleClickPopup} className="popup__buttons__no">
+                No
+              </button>
             </div>
           </div>
         </div>
