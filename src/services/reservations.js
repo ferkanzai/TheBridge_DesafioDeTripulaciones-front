@@ -2,20 +2,24 @@ import axios from "axios";
 import { API_URL } from "../constants";
 
 export const postStartReservation = async (token, connectionId) => {
-  const config = {
-    headers: {
-      authorization: token,
-    },
-    withCredentials: true,
-  };
+  try {
+    const config = {
+      headers: {
+        authorization: token,
+      },
+      withCredentials: true,
+    };
 
-  const response = await axios.post(
-    `${API_URL}/reservations/start/${connectionId}`,
-    {},
-    config
-  );
+    const response = await axios.post(
+      `${API_URL}/reservations/start/${connectionId}`,
+      {},
+      config
+    );
 
-  return response.data.data;
+    return response;
+  } catch (error) {
+    return error.response;
+  }
 };
 
 export const getUserReservations = async (token) => {

@@ -53,6 +53,7 @@ const ChargePointReservationPage = ({
   const [popupCancelReservation, setPopupCancelReservation] = useState(false);
   const [popupExtendReservation, setPopupExtendReservation] = useState(false);
   const [message, setMessage] = useState("RESERVA REALIZADA CON ÉXITO");
+  const [reservationError, setReservationError] = useState(null);
 
   const history = useHistory();
 
@@ -63,6 +64,14 @@ const ChargePointReservationPage = ({
 
     return () => clearInterval(id);
   }, [time]);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setReservationError(false);
+    }, 2500);
+
+    return () => clearInterval(id);
+  }, [reservationError]);
 
   useEffect(() => {
     getIsFavorite(token, chargePoint.id).then((res) => {
@@ -99,14 +108,31 @@ const ChargePointReservationPage = ({
       handleClickPopupActiveReservation();
     } else {
       postStartReservation(token, connectionId).then((res) => {
-        getActiveReservation(token).then((res) => {
-          setActiveReservation(res[0]);
-          setIsActiveReservation(true);
-          setReservationEndTime(
-            // + 2 * 1000 * 60 * 60
-            dayjs(res[0].expiration_date)
-          );
-        });
+        console.log(res);
+        if (res.status === 201) {
+          getActiveReservation(token).then((res) => {
+            setActiveReservation(res[0]);
+            setIsActiveReservation(true);
+            setReservationEndTime(
+              // + 2 * 1000 * 60 * 60
+              dayjs(res[0].expiration_date)
+            );
+          });
+        } else {
+          if (
+            res.data.info.message ===
+            "Unable to create new reservation, user has an active reservation in place"
+          ) {
+            setMessage("TIENES UNA RESERVA ACTIVA. NO PUEDES INICIAR OTRA");
+          }
+          if (
+            res.data.info.message ===
+            "Unable to create new reservation, connection already reserved"
+          ) {
+            setMessage("PUNTO DE CARGA ACTUALMENTE RESERVADO POR OTRO USUARIO");
+          }
+          setReservationError(true);
+        }
       });
     }
   };
@@ -184,7 +210,6 @@ const ChargePointReservationPage = ({
   };
 
   const extendReservation = () => {
-    console.log(activeReservation);
     putExtendReservation(token, activeReservation.reservation_id).then(() => {
       getActiveReservation(token).then((res) => {
         setPopupExtendReservation(!popupExtendReservation);
@@ -227,16 +252,32 @@ const ChargePointReservationPage = ({
       </div>
       {loadingActiveReservation ? (
         <Skeleton width={5} />
-      ) : activeReservation?.charge_point_id === chargePoint.id ? (
+      ) : activeReservation?.charge_point_id === chargePoint.id ||
+        reservationError ? (
         <div className="reservationPage__message">
-          <div className="reservationPage__message__info">
-            <p className="reservationPage__message__info__text">{message}</p>
+          <div
+            className={
+              reservationError
+                ? "reservationPage__message__error"
+                : "reservationPage__message__info"
+            }
+          >
+            <p
+              className={
+                reservationError
+                  ? "reservationPage__message__error__text"
+                  : "reservationPage__message__info__text"
+              }
+            >
+              {message}
+            </p>
           </div>
-          <p className="reservationPage__message__time">
-            {/* In progress */}
-            *Dispones de {reservationEndTime ? getMin() : <Skeleton />} min para
-            llegar al punto de carga
-          </p>
+          {!reservationError && (
+            <p className="reservationPage__message__time">
+              *Dispones de {reservationEndTime ? getMin() : <Skeleton />} min
+              para llegar al punto de carga
+            </p>
+          )}
         </div>
       ) : null}
       <div className="reservationPage__buttons">
