@@ -32,13 +32,17 @@ export const postLogin = async (email, password) => {
 };
 
 export const postSignUp = async (email, password, name) => {
-  const body = { email, password, name };
+  try {
+    const body = { email, password, name };
 
-  const response = await axios.post(`${API_URL}/auth/signup`, body, {
-    withCredentials: true,
-  });
+    const response = await axios.post(`${API_URL}/auth/signup`, body, {
+      withCredentials: true,
+    });
 
-  return response.data;
+    return response;
+  } catch (error) {
+    return error.response;
+  }
 };
 
 export const getFullProfile = async (token) => {

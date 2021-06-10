@@ -38,10 +38,14 @@ export function useUser() {
     });
   };
 
-  const signUp = async (email, password, name) => {
+  const signUp = async (email, password, name, cb) => {
     postSignUp(email, password, name).then((res) => {
-      setUser(res.data);
-      localStorage.setItem("access_token", res.token);
+      if (res.status === 200) {
+        setUser(res.data.data);
+        localStorage.setItem("access_token", res.data.token);
+      } else {
+        cb(res);
+      }
     });
   };
 

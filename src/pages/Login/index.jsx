@@ -46,7 +46,9 @@ const Login = () => {
             <div className="login__form__email">
               <input
                 className={
-                  errors.email && errors.email.type === "required"
+                  errors.email &&
+                  (errors.email.type === "required" ||
+                    errors.email.type === "pattern")
                     ? "login__form__redLine"
                     : "login__form__input"
                 }
