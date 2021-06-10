@@ -68,15 +68,20 @@ const SingleUserCar = () => {
       <div className="singleCar__car">
         {car && (
           <div className="singleCar__car__info">
-            <div className="singleCar__car__info__titlesDiv">
-              <h2>Configura tu coche</h2>
-              <p>{car.alias || "No alias"}</p>
+            <div className="singleCar__car__info__titles">
+              <span className="singleCar__car__info__titles__title">
+                Edita tu vehículo
+              </span>
+              <div className="singleCar__car__info__titles__carInfo">
+                <span>{car.name}</span>
+                <span>{car.model}</span>
+              </div>
             </div>
-            <div className="singleCar__car__info__imageDiv">
+            <div className="singleCar__car__info__images">
               <img
                 src={carImg}
                 alt={`${car.name} - ${car.model}`}
-                className="singleCar__car__info__imageDiv__image"
+                className="singleCar__car__info__images__image"
               />
             </div>
           </div>
@@ -94,7 +99,7 @@ const SingleUserCar = () => {
             className="singleCar__car__form__alias"
           />
           {car.is_primary_car ? (
-            <span className="singleCar__car__form__check">
+            <span className="singleCar__car__form__principal">
               Este coche ya es el coche principal
             </span>
           ) : (
@@ -113,16 +118,16 @@ const SingleUserCar = () => {
               type="submit"
               className="singleCar__car__form__buttons__submit"
             >
-              Modificar
+              Cambiar
             </button>
             {car.is_primary_car ? (
-              <span className="singleCar__car__form__buttons__remove">
+              <span className="singleCar__car__form__buttons__noRemove">
                 Este coche no se puede eliminar
               </span>
             ) : (
               <button
                 onClick={handleClickPopup}
-                className="singleCar__car__form__buttons__remove singleCar__car__form__buttons__submit"
+                className="singleCar__car__form__buttons__remove"
               >
                 Eliminar coche
               </button>

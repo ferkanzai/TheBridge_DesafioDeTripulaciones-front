@@ -5,6 +5,7 @@
   flex-direction: column;
   height: calc(100vh - 56px);
   justify-content: space-between;
+  background-color: $primary;
 
   &__car {
     display: flex;
@@ -14,22 +15,60 @@
 
     &__info {
       display: flex;
-      margin: 0 20px;
+      justify-content: space-between;
+      margin: 1.5rem 1.5rem 0 1.5rem;
+
+      &__titles {
+        display: flex;
+        flex-direction: column;
+        align-content: space-between;
+        justify-content: space-around;
+        max-width: 10rem;
+
+        &__title {
+          color: $grey6;
+          font-size: 1.25rem;
+        }
+
+        &__carInfo {
+          display: flex;
+          flex-direction: column;
+          color: $lightPrimary;
+          font-size: 1.5rem;
+          white-space: nowrap;
+          overflow-x: scroll;
+        }
+      }
     }
 
     &__form {
       display: flex;
       flex-direction: column;
-      margin: 0 16px;
+      margin: 0 1rem;
+
+      input {
+        @include inputs;
+        color: $accentColor;
+        padding-left: 1rem;
+        width: 95%;
+        height: 3rem;
+        margin-bottom: 0.5rem;
+      }
+
+      label {
+        color: $grey4;
+        font-size: 0.875rem;
+        margin-left: 0.5rem;
+      }
 
       &__check {
         align-items: center;
         display: flex;
-        margin: 5px;
 
         & input[type="checkbox"] {
           height: 24px;
-          margin: 0 5px 0 0;
+          margin-top: 0.5rem;
+          margin-right: 0.5rem;
           width: 24px;
         }
       }
@@ -40,20 +79,34 @@
         width: 220px;
       }
 
+      &__principal {
+        color: $grey4;
+        margin: 0.7rem;
+      }
+
       &__buttons {
         display: flex;
+        justify-content: space-between;
+        align-items: center;
 
         &__submit {
-          background-color: #333333;
-          border: none;
-          color: white;
-          height: 34px;
-          margin: 5px;
-          width: 165px;
+          @include grey-button;
+          padding: 1rem 2rem;
+        }
+
+        &__remove {
+          @include grey-button;
+          padding: 1rem 1.5rem;
+        }
+
+        &__noRemove {
+          color: $grey4;
+          margin-left: 1rem;
         }
       }
     }
   }
+
   .popup {
     background: rgba(104, 113, 159, 0.5);
     height: 100vh;
