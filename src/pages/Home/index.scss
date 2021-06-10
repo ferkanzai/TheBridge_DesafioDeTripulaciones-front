@@ -39,14 +39,14 @@
       @include blue-green-button;
       margin-left: 0;
       margin-right: 0;
+      min-width: 100%;
       white-space: nowrap;
-      width: 100%;
     }
 
     &__login {
       @include white-button;
+      min-width: 100%;
       white-space: nowrap;
-      width: 100%;
     }
 
     &__continue {
