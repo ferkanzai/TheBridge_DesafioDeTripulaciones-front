@@ -29,10 +29,19 @@ import { getConenctionsByChargePoint } from "../../services/connections";
 import "./index.scss";
 import { Skeleton } from "@material-ui/lab";
 
-const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
-  const { user, token, userFavorites, setUserFavorites } =
-    useContext(UserContext);
-  const [activeReservation, setActiveReservation] = useState(null);
+const ChargePointReservationPage = ({
+  chargePoint,
+  setIsReservationPage,
+  cancelReservationTop,
+}) => {
+  const {
+    user,
+    token,
+    userFavorites,
+    setUserFavorites,
+    activeReservation,
+    setActiveReservation,
+  } = useContext(UserContext);
   const [isFavorite, setIsFavorite] = useState(false);
   const [isActiveReservation, setIsActiveReservation] = useState(false);
   const [loadingActiveReservation, setLoadingActiveReservation] =
@@ -89,16 +98,16 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
     if (isActiveReservation) {
       handleClickPopupActiveReservation();
     } else {
-      postStartReservation(token, connectionId)
-        .then((res) => {
-          setIsActiveReservation(true);
+      postStartReservation(token, connectionId).then((res) => {
+        getActiveReservation(token).then((res) => {
           setActiveReservation(res[0]);
-        })
-        .finally(() => {
-          if (isActiveReservation) {
-            setReservationEndTime(dayjs(activeReservation.expiration_date));
-          }
+          setIsActiveReservation(true);
+          setReservationEndTime(
+            // + 2 * 1000 * 60 * 60
+            dayjs(res[0].expiration_date)
+          );
         });
+      });
     }
   };
 
@@ -111,7 +120,7 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
   useEffect(() => {
     getConenctionsByChargePoint(chargePoint.id).then((res) => {
       const cId = res[0].id;
-      setConnectionId(res[0].id);
+      setConnectionId(cId);
 
       getActiveReservation(token)
         .then((res) => {
@@ -128,9 +137,6 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
         })
         .finally(() => {
           setLoadingActiveReservation(false);
-          if (activeReservation) {
-            setReservationEndTime(dayjs(activeReservation.expiration_date));
-          }
         });
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -156,8 +162,10 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
   const cancelReservation = () => {
     putCancelReservation(token, activeReservation.reservation_id).then(
       (res) => {
+        cancelReservationTop?.();
         setActiveReservation(null);
         setIsActiveReservation(false);
+        setReservationEndTime(null);
         setPopupCancelReservation(!popupCancelReservation);
       }
     );
@@ -176,15 +184,14 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
   };
 
   const extendReservation = () => {
-    putExtendReservation(token, activeReservation.reservation_id)
-      .then((res) => {
-        setActiveReservation(res[0]);
+    console.log(activeReservation);
+    putExtendReservation(token, activeReservation.reservation_id).then(() => {
+      getActiveReservation(token).then((res) => {
         setPopupExtendReservation(!popupExtendReservation);
         setMessage("RESERVA AMPLIADA 10 MINUTOS");
-      })
-      .finally(() => {
-        setReservationEndTime(dayjs(activeReservation.expiration_date));
+        setReservationEndTime(dayjs(res[0].expiration_date));
       });
+    });
   };
 
   const handleExtendPopup = () => {
@@ -220,7 +227,7 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
       </div>
       {loadingActiveReservation ? (
         <Skeleton width={5} />
-      ) : activeReservation ? (
+      ) : activeReservation?.charge_point_id === chargePoint.id ? (
         <div className="reservationPage__message">
           <div className="reservationPage__message__info">
             <p className="reservationPage__message__info__text">{message}</p>
@@ -235,7 +242,7 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
       <div className="reservationPage__buttons">
         <button
           className={
-            activeReservation
+            activeReservation?.charge_point_id === chargePoint.id
               ? "reservationPage__buttons__active"
               : "reservationPage__buttons__inactive"
           }
@@ -256,7 +263,7 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
       </div>
       {loadingActiveReservation ? (
         <Skeleton />
-      ) : activeReservation ? (
+      ) : activeReservation?.charge_point_id === chargePoint.id ? (
         <>
           <hr />
           <div className="reservationPage__extend">

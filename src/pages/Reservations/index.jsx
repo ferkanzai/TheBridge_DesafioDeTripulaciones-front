@@ -37,7 +37,6 @@ const Reservations = () => {
     useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
     setLoadingActiveReservation(true);
 
     getActiveReservation(token)
@@ -54,7 +53,7 @@ const Reservations = () => {
         setActiveReservation(null);
       })
       .finally(() => setLoadingActiveReservation(false));
-  }, [setActiveReservation, isReservationPage]);
+  }, [token, isReservationPage, setActiveReservation]);
 
   useEffect(() => {
     getUserReservations(token).then((res) => setPastReservations(res));
@@ -65,6 +64,8 @@ const Reservations = () => {
       .then((res) => setChargePoint(res[0]))
       .finally(() => setIsReservationPage(true));
   };
+
+  const cancelReservationTop = () => setIsActiveReservation(false);
 
   return (
     <div className="reservations">
@@ -142,6 +143,7 @@ const Reservations = () => {
         <ChargePointReservationPage
           chargePoint={chargePoint}
           setIsReservationPage={setIsReservationPage}
+          cancelReservationTop={cancelReservationTop}
         />
       )}
     </div>
