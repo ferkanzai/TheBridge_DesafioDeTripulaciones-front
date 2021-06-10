@@ -20,7 +20,7 @@ const AddCar = () => {
 
   const handleFormSubmit = (formValues, resetCb) => {
     postAddUserCar(token, formValues.car).then((res) => {
-      setUserCars((prevUserCars) => [res[0], ...prevUserCars]);
+      setUserCars((prevUserCars) => [...prevUserCars, res[0]]);
       resetCb();
     });
   };

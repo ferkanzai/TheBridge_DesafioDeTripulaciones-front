@@ -47,3 +47,23 @@ export const chooseSrc = {
   "The New Motion (BE)": `${path}/newmotion.png`,
   "EV-Box": `${path}/evbox.png`,
 };
+
+const carsPath = "/cars";
+
+export const chooseCar = {
+  "EQA 350 4MATIC": `${carsPath}/mercedes-eqa.png`,
+  "EQA 300 4MATIC": `${carsPath}/mercedes-eqa.png`,
+  "EQA 250": `${carsPath}/mercedes-eqa.png`,
+  "EQV 300 Extra-Long	": `${carsPath}/mercedes-eqv.png`,
+  "EQV 300 Long	": `${carsPath}/mercedes-eqv.png`,
+  "EQS 450+": `${carsPath}/mercedes-eqs.png`,
+  "EQS 580 4MATIC": `${carsPath}/mercedes-eqs.png`,
+  i4: `${carsPath}/bwm-i4.png`,
+  iX3: `${carsPath}/bwm-ix3.png`,
+  "iX xDrive 40": `${carsPath}/bwm-ix.png`,
+  "iX xDrive 50": `${carsPath}/bwm-ix.png`,
+  "Model 3 Long Range Dual Motor": `${carsPath}/tesla-3.png`,
+  "Model 3 Performance": `${carsPath}/tesla-3.png`,
+  "Model 3 Standard Range Plus": `${carsPath}/tesla-3.png`,
+  "Model 3 Standard Range Plus LFP": `${carsPath}/tesla-3.png`,
+};

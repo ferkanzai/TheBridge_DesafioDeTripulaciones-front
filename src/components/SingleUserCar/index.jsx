@@ -11,8 +11,10 @@ import {
 
 import { UserContext } from "../../store";
 
+import { chooseCar } from "../../utils";
+
 import arrowDown from "../../svg/arrow-down.svg";
-import carImg from "../../car.png";
+import carImg from "../../cars/car.png";
 
 import "./index.scss";
 
@@ -27,8 +29,6 @@ const SingleUserCar = ({
   const { handleSubmit, register, reset } = useForm();
   const history = useHistory();
   const [openDelete, setOpenDelete] = useState(false);
-
-  console.log(singleCar);
 
   const changePrimary = () => {
     putChangePrimaryCar(token, singleCar.user_car_id)
@@ -94,7 +94,7 @@ const SingleUserCar = ({
             </div>
             <div className="singleCar__car__info__images">
               <img
-                src={carImg}
+                src={chooseCar[singleCar.model] || carImg}
                 alt={`${singleCar.name} - ${singleCar.model}`}
                 className="singleCar__car__info__images__image"
               />

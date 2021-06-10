@@ -1,6 +1,8 @@
 import Skeleton from "react-loading-skeleton";
 
-import carImg from "../../car.png";
+import { chooseCar } from "../../utils";
+
+import carImg from "../../cars/car.png";
 
 import "./index.scss";
 
@@ -29,7 +31,7 @@ const UserCars = ({ toggleSingleCarView, userCars, loadingCars }) => {
               }
             >
               <img
-                src={carImg}
+                src={chooseCar[car.model] || carImg}
                 alt={`${car.name} - ${car.model}`}
                 className="userCars__cars__car__image"
               />
