@@ -133,7 +133,8 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
           }
         });
     });
-  }, [activeReservation, chargePoint, token]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chargePoint, token]);
 
   const getMin = () => {
     const diffInMins = reservationEndTime.diff(time, "minutes");
