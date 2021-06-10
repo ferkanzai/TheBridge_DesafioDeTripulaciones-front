@@ -32,7 +32,7 @@ const AddCar = () => {
       })
       .catch((err) => err.code === 401 && setUserCars([]))
       .finally(() => setLoadingCars(false));
-  }, [token]);
+  }, [token, viewSingleCar]);
 
   const toggleSingleCarView = (car) => {
     setViewSingleCar(!viewSingleCar);
@@ -63,7 +63,7 @@ const AddCar = () => {
           />
         </div>
         {viewSingleCar && (
-          <div>
+          <div className="new">
             <SingleUserCar
               singleCar={singleCar}
               setSingleCar={setSingleCar}
