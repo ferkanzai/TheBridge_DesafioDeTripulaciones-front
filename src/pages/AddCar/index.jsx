@@ -1,26 +1,44 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import AddUserCar from "../../components/AddUserCar";
 import BackArrow from "../../components/BackArrow";
+import SingleUserCar from "../../components/SingleUserCar";
 import UserCars from "../../components/UserCars";
 
 import { UserContext } from "../../store";
 
-import { postAddUserCar } from "../../services/users";
+import { getUserCars, postAddUserCar } from "../../services/users";
 
 import "./index.scss";
 
 const AddCar = () => {
-  let { token } = useContext(UserContext);
-  const [carToAdd, setCarToAdd] = useState(null);
-
-  token = localStorage.getItem("access_token");
+  const { token } = useContext(UserContext);
+  const [viewSingleCar, setViewSingleCar] = useState(false);
+  const [userCars, setUserCars] = useState([]);
+  const [loadingCars, setLoadingCars] = useState(true);
+  const [singleCar, setSingleCar] = useState(null);
 
   const handleFormSubmit = (formValues, resetCb) => {
     postAddUserCar(token, formValues.car).then((res) => {
-      setCarToAdd(res[0]);
+      setUserCars((prevUserCars) => [res[0], ...prevUserCars]);
       resetCb();
     });
+  };
+
+  useEffect(() => {
+    getUserCars(token)
+      .then((res) => {
+        setUserCars(res);
+      })
+      .catch((err) => err.code === 401 && setUserCars([]))
+      .finally(() => setLoadingCars(false));
+  }, [token]);
+
+  const toggleSingleCarView = (car) => {
+    setViewSingleCar(!viewSingleCar);
+    if (!viewSingleCar) {
+      setSingleCar(car);
+    }
   };
 
   return (
@@ -38,8 +56,23 @@ const AddCar = () => {
           </div>
         </div>
         <div className="addCar__total__userCars">
-          <UserCars carToAdd={carToAdd} />
+          <UserCars
+            toggleSingleCarView={toggleSingleCarView}
+            userCars={userCars}
+            loadingCars={loadingCars}
+          />
         </div>
+        {viewSingleCar && (
+          <div>
+            <SingleUserCar
+              singleCar={singleCar}
+              setSingleCar={setSingleCar}
+              toggleSingleCarView={toggleSingleCarView}
+              setUserCars={setUserCars}
+              userCars={userCars}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

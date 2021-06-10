@@ -11,7 +11,6 @@ import Map from "./pages/Map";
 import Profile from "./pages/Profile";
 import Reservations from "./pages/Reservations";
 import SignUp from "./pages/SignUp";
-import SingleUserCar from "./pages/SingleUserCar";
 import Start from "./pages/Start";
 
 import { UserContext } from "./store";
@@ -46,14 +45,6 @@ function App() {
             <WithNavBar>
               <Map />
             </WithNavBar>
-          </Route>
-
-          <Route path="/settings/:userCarId">
-            <WithAuthentication>
-              <WithNavBar>
-                <SingleUserCar />
-              </WithNavBar>
-            </WithAuthentication>
           </Route>
 
           <Route path="/start" exact>

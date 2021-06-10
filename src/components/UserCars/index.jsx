@@ -1,32 +1,10 @@
-import { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
-
-import { getUserCars } from "../../services/users";
-
-import { UserContext } from "../../store";
 
 import carImg from "../../car.png";
 
 import "./index.scss";
 
-const UserCars = ({ car, carToAdd }) => {
-  let { token } = useContext(UserContext);
-
-  token = localStorage.getItem("access_token");
-
-  const [userCars, setUserCars] = useState([]);
-  const [loadingCars, setLoadingCars] = useState(true);
-
-  useEffect(() => {
-    getUserCars(token)
-      .then((res) => {
-        setUserCars(res);
-      })
-      .catch((err) => err.code === 401 && setUserCars([]))
-      .finally(() => setLoadingCars(false));
-  }, [car, carToAdd, token]);
-
+const UserCars = ({ toggleSingleCarView, userCars, loadingCars }) => {
   return (
     <div className="userCars">
       {userCars.length === 1 ? (
@@ -41,8 +19,8 @@ const UserCars = ({ car, carToAdd }) => {
           <Skeleton width={350} height={162} />
         ) : userCars.length ? (
           userCars.map((car) => (
-            <Link
-              to={`/settings/${car.user_car_id}`}
+            <div
+              onClick={() => toggleSingleCarView(car)}
               key={car.user_car_id}
               className={
                 car.is_primary_car
@@ -68,7 +46,7 @@ const UserCars = ({ car, carToAdd }) => {
                     : car.alias}
                 </span>
               </div>
-            </Link>
+            </div>
           ))
         ) : (
           <div className="userCars__noCars">

@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useContext, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 import {
@@ -9,38 +9,43 @@ import {
   putUpdateUserCarAlias,
 } from "../../services/users";
 
-import UserCars from "../../components/UserCars";
+import { UserContext } from "../../store";
 
+import arrowDown from "../../svg/arrow-down.svg";
 import carImg from "../../car.png";
+
 import "./index.scss";
 
-const SingleUserCar = () => {
-  const token = localStorage.getItem("access_token");
-
-  const { userCarId } = useParams();
+const SingleUserCar = ({
+  singleCar,
+  setSingleCar,
+  toggleSingleCarView,
+  setUserCars,
+  userCars,
+}) => {
+  const { token } = useContext(UserContext);
   const { handleSubmit, register, reset } = useForm();
   const history = useHistory();
-  const [car, setCar] = useState({});
   const [openDelete, setOpenDelete] = useState(false);
 
-  useEffect(() => {
-    getSingleUserCarById(token, userCarId).then((res) => setCar(res[0]));
-  }, [token, userCarId]);
+  console.log(singleCar);
 
   const changePrimary = () => {
-    putChangePrimaryCar(token, userCarId)
+    putChangePrimaryCar(token, singleCar.user_car_id)
       .then(() =>
-        getSingleUserCarById(token, userCarId).then((res) => setCar(res[0]))
+        getSingleUserCarById(token, singleCar.user_car_id).then((res) =>
+          setSingleCar(res[0])
+        )
       )
       .catch((err) => console.log(err.message));
   };
 
   const handleFormSubmit = (formValues) => {
     const { alias, primary } = formValues;
-    if (primary) changePrimary();
+    if (primary && !singleCar.is_primary_car) changePrimary();
     if (alias)
-      putUpdateUserCarAlias(token, userCarId, alias).then((res) =>
-        setCar(res[0])
+      putUpdateUserCarAlias(token, singleCar.user_car_id, alias).then((res) =>
+        setSingleCar(res[0])
       );
 
     reset();
@@ -51,11 +56,15 @@ const SingleUserCar = () => {
   };
 
   const removeCar = () => {
-    const { user_car_id, is_primary_car } = car;
+    const { user_car_id, is_primary_car } = singleCar;
     if (!is_primary_car) {
       deleteRemoveUserCar(token, user_car_id)
-        .then(() => {
-          history.push("/add-car");
+        .then((res) => {
+          setUserCars(
+            userCars.filter((userCar) => userCar.user_car_id !== user_car_id)
+          );
+          setOpenDelete(false);
+          toggleSingleCarView();
         })
         .catch((err) => (err.code === 401 ? history.push("/profile") : null));
     } else {
@@ -65,22 +74,28 @@ const SingleUserCar = () => {
 
   return (
     <div className="singleCar">
+      <img
+        src={arrowDown}
+        alt=""
+        className="singleCar__arrow"
+        onClick={toggleSingleCarView}
+      />
       <div className="singleCar__car">
-        {car && (
+        {singleCar && (
           <div className="singleCar__car__info">
             <div className="singleCar__car__info__titles">
               <span className="singleCar__car__info__titles__title">
                 Edita tu vehículo
               </span>
               <div className="singleCar__car__info__titles__carInfo">
-                <span>{car.name}</span>
-                <span>{car.model}</span>
+                <span>{singleCar.name}</span>
+                <span>{singleCar.model}</span>
               </div>
             </div>
             <div className="singleCar__car__info__images">
               <img
                 src={carImg}
-                alt={`${car.name} - ${car.model}`}
+                alt={`${singleCar.name} - ${singleCar.model}`}
                 className="singleCar__car__info__images__image"
               />
             </div>
@@ -92,13 +107,17 @@ const SingleUserCar = () => {
         >
           <input
             type="text"
-            placeholder={car.alias || "Cambiar alias"}
+            placeholder={
+              singleCar.alias
+                ? `Alias actual: ${singleCar.alias}`
+                : "Cambiar alias"
+            }
             id="alias"
             name="alias"
             {...register("alias")}
             className="singleCar__car__form__alias"
           />
-          {car.is_primary_car ? (
+          {singleCar.is_primary_car ? (
             <span className="singleCar__car__form__principal">
               Este coche ya es el coche principal
             </span>
@@ -120,7 +139,7 @@ const SingleUserCar = () => {
             >
               Cambiar
             </button>
-            {car.is_primary_car ? (
+            {singleCar.is_primary_car ? (
               <span className="singleCar__car__form__buttons__noRemove">
                 Este coche no se puede eliminar
               </span>
@@ -135,7 +154,6 @@ const SingleUserCar = () => {
           </div>
         </form>
       </div>
-      <UserCars car={car} />
 
       {openDelete && (
         <div className="popup">

@@ -20,8 +20,6 @@ const Login = () => {
 
   const handleFormSubmit = (formValues) => {
     login(formValues.email, formValues.password, (err) => {
-      console.log(true);
-      console.log(err);
       if (err.status === 403) alert(err.data.info.message);
     });
   };
