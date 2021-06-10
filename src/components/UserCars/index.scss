@@ -32,6 +32,14 @@
       text-decoration: none;
       width: 146px;
 
+      &__image {
+        height: 112px;
+
+        & img {
+          max-width: 160px;
+        }
+      }
+
       a:active {
         text-emphasis: none;
       }

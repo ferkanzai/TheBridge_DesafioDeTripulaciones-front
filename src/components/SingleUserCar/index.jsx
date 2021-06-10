@@ -11,12 +11,40 @@ import {
 
 import { UserContext } from "../../store";
 
-import { chooseCar } from "../../utils";
+import carImg from "../../cars/car.png";
+import bmwI4 from "../../cars/bmw-i4.png";
+import bmwIX from "../../cars/bmw-ix.png";
+import bmwIX3 from "../../cars/bmw-ix3.png";
+import mercedesEQA from "../../cars/mercedes-eqa.png";
+import mercedesEQV from "../../cars/mercedes-eqv.png";
+import mercedesEQS from "../../cars/mercedes-eqs.png";
+import tesla3 from "../../cars/tesla-3.png";
+import teslaS from "../../cars/tesla-s.jpg";
 
 import arrowDown from "../../svg/arrow-down.svg";
-import carImg from "../../cars/car.png";
 
 import "./index.scss";
+
+const chooseCar = {
+  "EQA 350 4MATIC": mercedesEQA,
+  "EQA 300 4MATIC": mercedesEQA,
+  "EQA 250": mercedesEQA,
+  "EQV 300 Extra-Long": mercedesEQV,
+  "EQV 300 Long": mercedesEQV,
+  "EQS 450+": mercedesEQS,
+  "EQS 580 4MATIC": mercedesEQS,
+  i4: bmwI4,
+  iX3: bmwIX3,
+  "iX xDrive 40": bmwIX,
+  "iX xDrive 50": bmwIX,
+  "Model 3 Long Range Dual Motor": tesla3,
+  "Model 3 Performance": tesla3,
+  "Model 3 Standard Range Plus": tesla3,
+  "Model 3 Standard Range Plus LFP": tesla3,
+  "Model S Long Range": teslaS,
+  "Model S Plaid": teslaS,
+  "Model S Plaid+": teslaS,
+};
 
 const SingleUserCar = ({
   singleCar,
