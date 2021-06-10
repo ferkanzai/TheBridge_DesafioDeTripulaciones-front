@@ -1,11 +1,13 @@
 .favorites {
   background-color: #2e3454;
-  padding-bottom: 60px;
-  padding-top: 16%;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  height: 100vh;
+  min-height: calc(100vh - 56px);
+  padding-bottom: 70px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 2rem;
 
   &__arrow {
     margin: 0 1rem 2rem 0;
