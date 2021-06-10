@@ -13,6 +13,7 @@ import ChargePointInformation from "../../components/ChargePointInformation";
 import ChargePointLegend from "../../components/ChargePointLegend";
 import ChargePointReservationPage from "../../components/ChargePointReservationPage";
 import FilterPanel from "../../components/FilterPanel";
+import Search from "../../components/Search";
 
 import { UserContext } from "../../store";
 
@@ -46,6 +47,7 @@ const Map = () => {
   const [singleChargePoint, setSingleChargePoint] = useState(null);
   const [viewReservationPage, setViewReservationPage] = useState(false);
   const [showLegendTemp, setShowLegendTemp] = useState(false);
+  const [viewSearch, setViewSearch] = useState(false);
   const [viewport, setViewport] = useState({
     latitude: userLat || 40,
     longitude: userLng || -3,
@@ -163,6 +165,10 @@ const Map = () => {
     setShowLegendTemp(true);
   };
 
+  const toggleSearch = () => {
+    setViewSearch(!viewSearch);
+  };
+
   return (
     <>
       {viewLegend && (!showNoMore || showLegendTemp) ? (
@@ -220,7 +226,7 @@ const Map = () => {
               <img src={info} alt="info" onClick={toggleLegendTemp} />
             </div>
             <div className="map__options__button">
-              <img src={search} alt="search" />
+              <img src={search} alt="search" onClick={toggleSearch} />
             </div>
             <div className="map__options__button" onClick={toggleFilter}>
               <img src={filterOptions} alt="filter" />
@@ -251,6 +257,7 @@ const Map = () => {
           setIsReservationPage={handleReservationView}
         />
       )}
+      {viewSearch && <Search toggleSearch={toggleSearch} />}
     </>
   );
 };
