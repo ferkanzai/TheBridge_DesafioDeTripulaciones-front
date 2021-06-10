@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { getProfile, postLogin, postSignUp } from "../services/auth";
 import { getFavoritesChargePoints } from "../services/favorites";
@@ -15,7 +15,10 @@ export function useUser() {
   const [showNoMore, setShowNoMore] = useState(false);
   const history = useHistory();
 
-  let token = localStorage.getItem("access_token");
+  const initialToken = localStorage.getItem("access_token");
+
+  const tokenRef = useRef(initialToken);
+  const token = tokenRef.current;
 
   useEffect(() => {
     getProfile(token)
@@ -31,7 +34,8 @@ export function useUser() {
     postLogin(email, password).then((res) => {
       if (res.status === 200) {
         setUser(res.data.data);
-        token = localStorage.setItem("access_token", res.data.token);
+        localStorage.setItem("access_token", res.data.token);
+        tokenRef.current = localStorage.getItem("access_token");
       } else {
         cb(res);
       }
@@ -43,6 +47,7 @@ export function useUser() {
       if (res.status === 201) {
         setUser(res.data.data);
         localStorage.setItem("access_token", res.data.token);
+        tokenRef.current = localStorage.getItem("access_token");
       } else {
         cb(res);
       }
