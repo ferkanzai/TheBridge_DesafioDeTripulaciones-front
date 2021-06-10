@@ -33,7 +33,47 @@
     position: relative;
     width: 90%;
 
-    input {
+    &__redLine {
+      @include inputs;
+      color: $accentColor;
+      padding-left: 1rem;
+      width: 100%;
+      border-bottom: 1px solid red;
+    }
+
+    &__password {
+      width: 100%;
+      margin-left: -1rem;
+      position: relative;
+
+      &__error {
+        position: absolute;
+        top: 22px;
+        right: 3rem;
+        color: $accentColor;
+      }
+
+      &__eye {
+        position: absolute;
+        right: 1rem;
+        top: 20px;
+      }
+    }
+
+    &__email {
+      width: 100%;
+      margin-left: -1rem;
+      position: relative;
+
+      &__error {
+        position: absolute;
+        top: 22px;
+        right: 1rem;
+        color: $accentColor;
+      }
+    }
+
+    &__input {
       @include inputs;
       color: $accentColor;
       padding-left: 1rem;
@@ -43,12 +83,6 @@
     input::-ms-reveal,
     input::-ms-clear {
       display: none;
-    }
-
-    &__eye {
-      position: absolute;
-      right: 1rem;
-      top: 88px;
     }
 
     &__forgot-password {

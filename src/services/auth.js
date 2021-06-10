@@ -15,16 +15,20 @@ export const getProfile = async (token) => {
 };
 
 export const postLogin = async (email, password) => {
-  const response = await axios.post(
-    `${API_URL}/auth/login`,
-    {
-      email,
-      password,
-    },
-    { withCredentials: true }
-  );
+  try {
+    const response = await axios.post(
+      `${API_URL}/auth/login`,
+      {
+        email,
+        password,
+      },
+      { withCredentials: true }
+    );
 
-  return response.data;
+    return response;
+  } catch (error) {
+    return error.response;
+  }
 };
 
 export const postSignUp = async (email, password, name) => {

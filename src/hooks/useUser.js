@@ -15,7 +15,7 @@ export function useUser() {
   const [showNoMore, setShowNoMore] = useState(false);
   const history = useHistory();
 
-  const token = localStorage.getItem("access_token");
+  let token = localStorage.getItem("access_token");
 
   useEffect(() => {
     getProfile(token)
@@ -27,10 +27,14 @@ export function useUser() {
     getActiveReservation(token).then((res) => setActiveReservation(res[0]));
   }, [history, token]);
 
-  const login = async (email, password) => {
+  const login = async (email, password, cb) => {
     postLogin(email, password).then((res) => {
-      setUser(res.data);
-      localStorage.setItem("access_token", res.token);
+      if (res.status === 200) {
+        setUser(res.data.data);
+        token = localStorage.setItem("access_token", res.data.token);
+      } else {
+        cb(res);
+      }
     });
   };
 

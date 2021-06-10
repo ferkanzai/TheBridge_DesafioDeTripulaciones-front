@@ -11,11 +11,19 @@ import eyeVisible from "../../svg/eyeVisible.svg";
 
 const Login = () => {
   const { user, login } = useContext(UserContext);
-  const { handleSubmit, register } = useForm();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
   const [passwordShown, setPasswordShown] = useState(false);
 
   const handleFormSubmit = (formValues) => {
-    login(formValues.email, formValues.password);
+    login(formValues.email, formValues.password, (err) => {
+      console.log(true);
+      console.log(err);
+      if (err.status === 403) alert(err.data.info.message);
+    });
   };
 
   const togglePasswordVisiblity = () => {
@@ -35,26 +43,60 @@ const Login = () => {
             onSubmit={handleSubmit(handleFormSubmit)}
             className="login__form"
           >
-            <input
-              type="email"
-              id="email"
-              name="email"
-              {...register("email", { required: true })}
-              placeholder="Email"
-            />
-            <input
-              type={passwordShown ? "text" : "password"}
-              id="password"
-              name="password"
-              {...register("password", { required: true })}
-              placeholder="Contraseña"
-            />
-            <img
-              className="login__form__eye"
-              alt=""
-              src={passwordShown ? eyeNotVisible : eyeVisible}
-              onClick={togglePasswordVisiblity}
-            />
+            <div className="login__form__email">
+              <input
+                className={
+                  errors.email && errors.email.type === "required"
+                    ? "login__form__redLine"
+                    : "login__form__input"
+                }
+                type="email"
+                id="email"
+                name="email"
+                {...register("email", {
+                  required: true,
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  },
+                })}
+                placeholder="Email"
+              />
+              {errors.email && errors.email.type === "required" && (
+                <span className="login__form__email__error">
+                  Email requerido
+                </span>
+              )}
+              {errors.email && errors.email.type === "pattern" && (
+                <span className="login__form__email__error">
+                  Eso no es un email
+                </span>
+              )}
+            </div>
+            <div className="login__form__password">
+              <input
+                className={
+                  errors.password && errors.password.type === "minLength"
+                    ? "login__form__redLine"
+                    : "login__form__input"
+                }
+                type={passwordShown ? "text" : "password"}
+                id="password"
+                name="password"
+                {...register("password", { required: true, minLength: 6 })}
+                placeholder="Contraseña"
+              />
+              {errors.password && errors.password.type === "minLength" && (
+                <span className="login__form__password__error">
+                  Mímimo 6 caracteres
+                </span>
+              )}
+              <img
+                className="login__form__password__eye"
+                alt=""
+                src={passwordShown ? eyeNotVisible : eyeVisible}
+                onClick={togglePasswordVisiblity}
+              />
+            </div>
             <span className="login__form__forgot-password">
               ¿Olvidaste tu contraseña?
             </span>
