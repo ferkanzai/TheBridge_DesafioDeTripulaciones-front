@@ -111,8 +111,6 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
   }, [chargePoint]);
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-
     getConenctionsByChargePoint(chargePoint.id).then((res) => {
       const cId = res[0].id;
       setConnectionId(res[0].id);
@@ -141,8 +139,7 @@ const ChargePointReservationPage = ({ chargePoint, setIsReservationPage }) => {
           }
         });
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chargePoint]);
+  }, [activeReservation, chargePoint, token]);
 
   const getMin = () => {
     const diffInMins = reservationEndTime.diff(time, "minutes");

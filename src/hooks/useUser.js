@@ -40,7 +40,7 @@ export function useUser() {
 
   const signUp = async (email, password, name, cb) => {
     postSignUp(email, password, name).then((res) => {
-      if (res.status === 200) {
+      if (res.status === 201) {
         setUser(res.data.data);
         localStorage.setItem("access_token", res.data.token);
       } else {

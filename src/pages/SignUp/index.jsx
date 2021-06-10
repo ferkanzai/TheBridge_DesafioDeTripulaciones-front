@@ -19,7 +19,9 @@ const SignUp = () => {
   const [passwordShown, setPasswordShown] = useState(false);
 
   const handleFormSubmit = (formValues) => {
-    signUp(formValues.email, formValues.password, formValues.name);
+    signUp(formValues.email, formValues.password, formValues.name, (err) => {
+      console.log(err);
+    });
   };
 
   const togglePasswordVisiblity = () => {

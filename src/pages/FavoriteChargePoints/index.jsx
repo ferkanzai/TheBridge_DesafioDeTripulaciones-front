@@ -19,21 +19,26 @@ import chargePoint5 from "../../svg/charge-point.svg";
 import "./index.scss";
 
 const FavoritesChargePoints = () => {
-  const { userFavorites, setUserFavorites, userContextLat, userContextLng } =
-    useContext(UserContext);
-
+  const {
+    token,
+    userFavorites,
+    setUserFavorites,
+    userContextLat,
+    userContextLng,
+  } = useContext(UserContext);
+  const [loadingFavs, setLoadingFavs] = useState(true);
   const [isReservationPage, setIsReservationPage] = useState(false);
   const [chargePoint, setChargePoint] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
 
-    getFavoritesChargePoints(token).then((res) => setUserFavorites(res));
+    getFavoritesChargePoints(token)
+      .then((res) => setUserFavorites(res))
+      .finally(() => setLoadingFavs(false));
   }, [setUserFavorites]);
 
   const removeFavorite = (favoriteId) => {
-    const token = localStorage.getItem("access_token");
-
     deleteRemoveFavorite(token, favoriteId).then(() =>
       setUserFavorites(
         userFavorites.filter((favorite) => favorite.fav_id !== favoriteId)
@@ -50,7 +55,9 @@ const FavoritesChargePoints = () => {
   return (
     <div className="favorites">
       <BackArrow goProfile={true} className="favorites__arrow" />
-      {userFavorites.length ? (
+      {loadingFavs ? (
+        <Skeleton width={300} />
+      ) : userFavorites.length ? (
         userFavorites.map((favorite) => {
           return (
             <div
@@ -77,7 +84,11 @@ const FavoritesChargePoints = () => {
           );
         })
       ) : (
-        <Skeleton width={300} />
+        <div className="favorites__noFavs">
+          <span className="favorites__noFavs__text">
+            No tienes puntos de carga favoritos
+          </span>
+        </div>
       )}
       {isReservationPage && (
         <ChargePointReservationPage

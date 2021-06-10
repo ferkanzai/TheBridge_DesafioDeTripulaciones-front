@@ -1,3 +1,5 @@
+@import "../../styles/common.scss";
+
 .favorites {
   background-color: #2e3454;
   display: flex;
@@ -11,6 +13,22 @@
 
   &__arrow {
     margin: 0 1rem 2rem 0;
+  }
+
+  &__noFavs {
+    height: 300px;
+    margin: 1rem;
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    &__text {
+      color: $accentColor;
+      font-size: 2rem;
+      margin-left: 0.5rem;
+      // text-align: center;
+    }
   }
 }
 
