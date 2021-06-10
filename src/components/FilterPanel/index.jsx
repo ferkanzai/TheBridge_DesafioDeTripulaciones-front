@@ -240,7 +240,7 @@ const FilterPanel = ({
               distinto
             </span>
             <div className="popup__buttons">
-              <button onClick={() => setMessage(false)}>VALE</button>
+              <button onClick={() => setMessage(false)}>volver</button>
             </div>
           </div>
         </div>
