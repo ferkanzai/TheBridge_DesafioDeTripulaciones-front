@@ -1,0 +1,33 @@
+@import "../../styles/common.scss";
+
+.connectionType {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  & input[type="checkbox"] {
+    display: none;
+  }
+
+  &__label {
+    align-items: center;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-around;
+    margin: 0 5px;
+    flex-direction: column;
+    color: $grey4;
+
+    &__name {
+      display: inline-block;
+      font-weight: 500;
+      white-space: nowrap;
+      margin: 5px 0;
+    }
+  }
+
+  :checked + label {
+    border: 2px solid $secondaryAccent;
+  }
+}

@@ -4,6 +4,7 @@ import Rating from "@material-ui/lab/Rating";
 import { withStyles } from "@material-ui/core";
 
 import OperatorsMenu from "../OperatorsMenu";
+import ConnectionTypeList from "../ConnectionTypeList";
 
 import {
   getFilteredAndCompatibleChargePoints,
@@ -43,6 +44,7 @@ const FilterPanel = ({
   }, [token]);
 
   const handleFormSubmit = (v) => {
+    console.log(v);
     const carIds = v.cars && (v.cars === "all" ? userCarIds : userPrimaryCarId);
 
     if (carIds) {
@@ -54,7 +56,8 @@ const FilterPanel = ({
         v.rating,
         v.connections,
         v.operators,
-        carIds
+        carIds,
+        v.connectionTypes
       ).then((res) => {
         if (res.length === 0) {
           setMessage(true);
@@ -70,7 +73,8 @@ const FilterPanel = ({
         v.distance,
         v.rating,
         v.connections,
-        v.operators
+        v.operators,
+        v.connectionTypes
       ).then((res) => {
         if (res.length === 0) {
           setMessage(true);
@@ -214,6 +218,7 @@ const FilterPanel = ({
                 </div>
               </div>
             )}
+            <ConnectionTypeList />
           </div>
           <div className={`${className}filter-panel__options__buttons`}>
             <button

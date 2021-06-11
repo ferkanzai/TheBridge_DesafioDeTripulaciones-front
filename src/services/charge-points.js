@@ -23,10 +23,11 @@ export const getFilteredChargePoints = async (
   distance,
   rating,
   connections,
-  operators
+  operators,
+  connectionTypes
 ) => {
   const response = await axios.get(
-    `${API_URL}/charge-points/filter?rating=${rating}&distance=${distance}&latitude=${lat}&longitude=${lng}&connections=${connections}&operators=${operators}`
+    `${API_URL}/charge-points/filter?rating=${rating}&distance=${distance}&latitude=${lat}&longitude=${lng}&connections=${connections}&operators=${operators}&connectionTypes=${connectionTypes}`
   );
 
   return response.data.data;
@@ -40,7 +41,8 @@ export const getFilteredAndCompatibleChargePoints = async (
   rating,
   connections,
   operators,
-  carIds
+  carIds,
+  connectionTypes
 ) => {
   const config = {
     headers: {
@@ -50,7 +52,7 @@ export const getFilteredAndCompatibleChargePoints = async (
   };
 
   const response = await axios.get(
-    `${API_URL}/charge-points/filter-and-compatible?rating=${rating}&distance=${distance}&latitude=${lat}&longitude=${lng}&connections=${connections}&operators=${operators}&carIds=${carIds}`,
+    `${API_URL}/charge-points/filter-and-compatible?rating=${rating}&distance=${distance}&latitude=${lat}&longitude=${lng}&connections=${connections}&operators=${operators}&carIds=${carIds}&connectionTypes=${connectionTypes}`,
     config
   );
 
