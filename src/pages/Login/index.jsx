@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Redirect } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
@@ -17,10 +17,21 @@ const Login = () => {
     formState: { errors },
   } = useForm();
   const [passwordShown, setPasswordShown] = useState(false);
+  const [loginError, setLoginError] = useState(false);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setLoginError(false);
+    }, 1000);
+
+    return () => clearInterval(id);
+  }, [loginError]);
 
   const handleFormSubmit = (formValues) => {
     login(formValues.email, formValues.password, (err) => {
-      if (err.status === 403) alert(err.data.info.message);
+      if (err.status === 403) {
+        setLoginError(true);
+      }
     });
   };
 
@@ -75,7 +86,8 @@ const Login = () => {
             <div className="login__form__password">
               <input
                 className={
-                  errors.password && errors.password.type === "minLength"
+                  loginError ||
+                  (errors.password && errors.password.type === "minLength")
                     ? "login__form__redLine"
                     : "login__form__input"
                 }
@@ -88,6 +100,11 @@ const Login = () => {
               {errors.password && errors.password.type === "minLength" && (
                 <span className="login__form__password__error">
                   Mímimo 6 caracteres
+                </span>
+              )}
+              {loginError && (
+                <span className="signup__form__email__error">
+                  Email o contraseña incorrectos
                 </span>
               )}
               <img

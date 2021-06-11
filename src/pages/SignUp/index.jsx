@@ -17,10 +17,13 @@ const SignUp = () => {
     formState: { errors },
   } = useForm();
   const [passwordShown, setPasswordShown] = useState(false);
+  const [signupError, setSignupError] = useState(false);
 
   const handleFormSubmit = (formValues) => {
     signUp(formValues.email, formValues.password, formValues.name, (err) => {
-      console.log(err);
+      if (err.status === 403) {
+        setSignupError(true);
+      }
     });
   };
 
@@ -63,9 +66,10 @@ const SignUp = () => {
             <div className="signup__form__email">
               <input
                 className={
-                  errors.email &&
-                  (errors.email.type === "required" ||
-                    errors.email.type === "pattern")
+                  signupError ||
+                  (errors.email &&
+                    (errors.email.type === "required" ||
+                      errors.email.type === "pattern"))
                     ? "signup__form__redLine"
                     : "signup__form__input"
                 }
@@ -88,6 +92,11 @@ const SignUp = () => {
               {errors.email && errors.email.type === "pattern" && (
                 <span className="signup__form__email__error">
                   Eso no es un email
+                </span>
+              )}
+              {signupError && (
+                <span className="signup__form__email__error">
+                  Este email ya está en uso
                 </span>
               )}
             </div>
