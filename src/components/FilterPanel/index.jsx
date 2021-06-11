@@ -218,6 +218,7 @@ const FilterPanel = ({
                 </div>
               </div>
             )}
+            <p>Tipo de cargador</p>
             <ConnectionTypeList />
           </div>
           <div className={`${className}filter-panel__options__buttons`}>

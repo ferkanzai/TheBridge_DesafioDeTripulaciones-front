@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Redirect } from "react-router-dom";
 
@@ -30,6 +30,14 @@ const SignUp = () => {
   const togglePasswordVisiblity = () => {
     setPasswordShown(passwordShown ? false : true);
   };
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setSignupError(false);
+    }, 1000);
+
+    return () => clearInterval(id);
+  }, [signupError]);
 
   return (
     <>
